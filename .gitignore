@@ -1,0 +1,5 @@
+/build
+/bun.lockb
+.idea
+node_modules
+/releases

@@ -1,0 +1,49 @@
+{
+  "name": "@tangible/now",
+  "version": "1.0.0",
+  "description": "Standalone command-line tool to manage local WordPress sites",
+  "main": "main.js",
+  "bin": {
+    "now": "build/esm/main.js"
+  },
+  "scripts": {
+    "start": "tsx src/main.ts start",
+    "pack": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js",
+    "start:bun": "NODE_ENV=development bun --hot run src/main.ts start",
+    "build": "mkdir -p build && npm run clean && npm run build:esm && npm run build:cjs",
+    "build:cjs": "bun build.ts cjs",
+    "build:esm": "bun build.ts esm",
+    "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/*",
+    "format": "prettier --no-config --no-semi --single-quote --write src",
+    "release": "npm run build && npm publish --access public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "pkg": {
+    "assets": [
+      "node_modules/@php-wasm/node/8_0_30/**",
+      "node_modules/@php-wasm/node/php_8_0.js"
+    ]
+  },
+  "dependencies": {
+    "@php-wasm/node": "^0.7.1",
+    "@php-wasm/universal": "^0.7.1",
+    "@webcontainer/env": "^1.1.1",
+    "@wp-playground/blueprints": "^0.7.1",
+    "compressible": "^2.0.18",
+    "compression": "^1.7.4",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.0",
+    "follow-redirects": "^1.15.6",
+    "fs-extra": "^11.2.0",
+    "hpagent": "^1.2.0",
+    "unzipper": "^0.11.4",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^5.11.5",
+    "globby": "^14.0.1",
+    "tsx": "^4.7.3"
+  }
+}
