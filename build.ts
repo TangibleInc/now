@@ -14,23 +14,25 @@ async function fileExists(file: string): Promise<boolean> {
   try {
     await fs.access(file)
     return true
-  } catch(e) {
+  } catch (e) {
     return false
   }
 }
 
 ;(async () => {
-
   // const { name } = JSON.parse(await fs.readFile('./package.json'))
   const name = 'now'
 
-  if (command==='bin') {
-    if (!await fileExists('releases/@tangible')) {
+  /**
+   * Prepare built binaries
+   */
+  if (command === 'bin') {
+    if (!(await fileExists('releases/@tangible'))) {
       console.log('Build binaries first: npm run build:bin')
       return
     }
     for (const file of await globby('releases/@tangible/*')) {
-      const target =  `releases/${file.split('/').pop()}`
+      const target = `releases/${file.split('/').pop()}`
       console.log(target)
       await fs.rename(file, target)
     }
@@ -38,10 +40,27 @@ async function fileExists(file: string): Promise<boolean> {
     return
   }
 
+  /**
+   * Add file extensions to satisfy ESM requirement
+   */
+  if (command === 'ext') {
+    for (const file of await globby('src/**/*.ts')) {
+      const content = (await fs.readFile(file, 'utf8'))
+        .replace(/from '\.(.+)'/g, "from '.$1.ts'")
+      console.log(file)
+      await fs.writeFile(file, content)
+    }
+
+    return
+  }
+
   const entryFile = 'src/index.ts'
-  await fs.writeFile(entryFile,
-    (await fs.readFile(entryFile, 'utf8'))
-      .replace(/const version = '[0-9]+\.[0-9]+\.[0-9]+'/, `const version = '${version}'`)
+  await fs.writeFile(
+    entryFile,
+    (await fs.readFile(entryFile, 'utf8')).replace(
+      /const version = '[0-9]+\.[0-9]+\.[0-9]+'/,
+      `const version = '${version}'`
+    )
   )
 
   const esbuildOptions = {
@@ -63,17 +82,16 @@ async function fileExists(file: string): Promise<boolean> {
     plugins: [
       // Built ES module format expects import from .js
       transformExtPlugin({ outExtension: { '.ts': '.js' } })
-    ]
+    ],
   }
 
   async function getEntryPoints() {
     return await globby(['./src/**/*.ts'], {
-      ignore: ['src/**/*.spec.ts']
+      ignore: ['src/**/*.spec.ts'],
     })
   }
 
   if (command === 'cjs') {
-
     // Individual files
     delete esbuildOptions.outfile
 
@@ -86,8 +104,8 @@ async function fileExists(file: string): Promise<boolean> {
       minify: false,
       sourcemap: false,
     })
-  } else if (command === 'esm') {
 
+  } else if (command === 'esm') {
     delete esbuildOptions.outfile
 
     Object.assign(esbuildOptions, {
@@ -101,9 +119,7 @@ async function fileExists(file: string): Promise<boolean> {
     })
 
   } else {
-
     // docs
-
   }
 
   const context = await esbuild.context(esbuildOptions)
@@ -128,7 +144,6 @@ async function fileExists(file: string): Promise<boolean> {
   } else {
     process.exit()
   }
-
 })().catch((error) => {
   console.error(error)
   process.exit(1)
