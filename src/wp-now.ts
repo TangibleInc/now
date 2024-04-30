@@ -412,7 +412,7 @@ export function inferMode(
 }
 
 async function installationStep2(php: NodePHP) {
-  return php.request({
+  return php.requestHandler?.request({
     url: '/wp-admin/install.php?step=2',
     method: 'POST',
     body: {

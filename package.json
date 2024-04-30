@@ -43,7 +43,7 @@
     ]
   },
   "dependencies": {
-    "@php-wasm/node": "^0.7.1",
+    "@php-wasm/node": "0.7.1",
     "@php-wasm/universal": "^0.7.1",
     "@webcontainer/env": "^1.1.1",
     "@wp-playground/blueprints": "^0.7.1",
