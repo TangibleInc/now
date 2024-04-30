@@ -115,7 +115,6 @@ function getWpContentHomePath(projectPath: string, mode: string) {
 export default async function getWpNowConfig(
   args: CliOptions,
 ): Promise<WPNowOptions> {
-
   // Options from wp-env config files
   const wpEnv: WPEnvOptions = {}
   for (const file of ['.wp-env.json', '.wp-env.override.json']) {

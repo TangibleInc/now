@@ -2,7 +2,8 @@
   "name": "@tangible/now",
   "version": "1.0.0",
   "description": "Standalone command-line tool to manage local WordPress sites",
-  "main": "main.js",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
   "bin": {
     "wp-now": "build/esm/main.js"
   },
@@ -11,12 +12,30 @@
     "build": "npm run format && npm run test && mkdir -p build && npm run clean && npm run build:esm && npm run build:cjs",
     "build:cjs": "bun build.ts cjs",
     "build:esm": "bun build.ts esm",
+    "build:types": "tsc --project tsconfig.types.json --declaration --emitDeclarationOnly --outDir build/types",
+    "build:bin": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js && bun build.ts bin",
     "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/*",
     "format": "prettier --no-config --log-level warn --no-semi --single-quote --write src",
     "test": "cd tests && tsx index.ts",
-    "release": "npm run build && npm publish --access public",
-    "build:bin": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js && bun build.ts bin"
+    "release": "npm run build && npm publish --access public"
   },
+  "exports": {
+    ".": {
+      "types": "./build/types/index.d.ts",
+      "require": "./build/cjs/index.js",
+      "import": "./build/esm/index.js"
+    },
+    "./*": {
+      "types": "./build/types/*.d.ts",
+      "require": "./build/cjs/*.js",
+      "import": "./build/esm/*.js"
+    }
+  },
+  "files": [
+    "build",
+    "license.txt",
+    "readme.md"
+  ],
   "pkg": {
     "assets": [
       "node_modules/@php-wasm/node/8_0_30/**",
@@ -39,6 +58,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "@yao-pkg/pkg": "^5.11.5",
     "globby": "^14.0.1",
     "testra": "^2.1.0",
