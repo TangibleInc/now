@@ -76,6 +76,16 @@ export async function runCli() {
 						'Create a new project environment, destroying the old project environment.',
 					type: 'boolean',
 				});
+				yargs.option('silence', {
+					describe:
+						'Silence any log messages to console output.',
+					type: 'boolean'
+				});
+				yargs.option('open', {
+					describe:
+						'Open the site in a browser.',
+					type: 'boolean',
+				});
 				yargs.option('inspect', {
 					describe: 'Use Node debugging client.',
 					type: 'number',
@@ -111,11 +121,19 @@ export async function runCli() {
 						port: argv.port as number,
 						blueprint: argv.blueprint as string,
 						reset: argv.reset as boolean,
+						silence: argv.silence as boolean,
+						noOpen: !argv.open as boolean,
 					});
 					portFinder.setPort(options.port as number);
 					const { url } = await startServer(options);
-					openInDefaultBrowser(url);
-				} catch (error) {
+
+
+          if (options.open) {
+            openInDefaultBrowser(url);
+          }
+        
+
+        } catch (error) {
 					output?.error(error);
 					spinner.fail(
 						`Failed to start the server: ${

@@ -45,7 +45,8 @@ export async function startServer(
 			`The given path "${options.projectPath}" does not exist.`
 		);
 	}
-	const app = express();
+
+  const app = express();
 	app.use(fileUpload());
 	app.use(compression({ filter: shouldCompress }));
 	app.use(addTrailingSlash('/wp-admin'));

@@ -27,7 +27,7 @@ import {
 	getPluginFile,
 	readFileHead,
 } from './wp-playground-wordpress';
-import { output } from './output';
+import { output, disableOutput } from './output';
 import getWpNowPath from './get-wp-now-path';
 import getWordpressVersionsPath from './get-wordpress-versions-path';
 import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path';
@@ -65,6 +65,10 @@ export default async function startWPNow(
 			`<?php echo 'Hello wp-now!';`
 		);
 	});
+
+  if (options.silence) {
+    disableOutput()
+  }
 
 	output?.log(`directory: ${options.projectPath}`);
 	output?.log(`mode: ${options.mode}`);
