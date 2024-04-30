@@ -14,7 +14,7 @@
     "build:esm": "bun build.ts esm",
     "build:types": "tsc --project tsconfig.types.json --declaration --emitDeclarationOnly --outDir build/types",
     "build:bin": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js && bun build.ts bin",
-    "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/*",
+    "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/* && rm -rf build/types/*",
     "format": "prettier --no-config --log-level warn --no-semi --single-quote --write src",
     "test": "cd tests && tsx index.ts",
     "release": "npm run build && npm publish --access public"
