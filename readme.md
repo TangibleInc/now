@@ -8,13 +8,10 @@ This is a fork of [`wp-now`](https://github.com/WordPress/playground-tools/tree/
 
 - [x] Add option `--silence` to stop log messages to console, for example during tests
 - [x] Add option `--open` to optionally open the site in a browser (previously by default)
-- [x] Package standalone executable binary for Linux/macOS/Windows
-
-  Currently using `@yao-pkg/pkg` which only supports CommonJS, not ES Modules.
-
 - [x] Load compatible configuration from `.wp-env.json` and `.wp-env.override.json`
   - [x] Port
   - [x] Mappings: Mount directories from local file system, such as vendor plugins
+- [x] Package standalone executable binary for Linux/macOS/Windows - Currently using [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg/)
 
 ## How it started
 
