@@ -1,12 +1,12 @@
 import fs from 'fs-extra'
 import { NodePHP, PHPLoaderOptions } from '@php-wasm/node'
 import path from 'path'
-import { SQLITE_FILENAME } from './constants'
+import { SQLITE_FILENAME } from './constants.ts'
 import {
   downloadMuPlugins,
   downloadSqliteIntegrationPlugin,
   downloadWordPress,
-} from './download'
+} from './download.ts'
 import {
   StepDefinition,
   activatePlugin,
@@ -16,7 +16,7 @@ import {
   login,
   runBlueprintSteps,
 } from '@wp-playground/blueprints'
-import { WPNowOptions, WPNowMode } from './config'
+import { WPNowOptions, WPNowMode } from './config.ts'
 import {
   hasIndexFile,
   isPluginDirectory,
@@ -26,11 +26,11 @@ import {
   isWordPressDevelopDirectory,
   getPluginFile,
   readFileHead,
-} from './wp-playground-wordpress'
-import { output, disableOutput } from './output'
-import getWpNowPath from './get-wp-now-path'
-import getWordpressVersionsPath from './get-wordpress-versions-path'
-import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path'
+} from './wp-playground-wordpress/index.ts'
+import { output, disableOutput } from './output.ts'
+import getWpNowPath from './get-wp-now-path.ts'
+import getWordpressVersionsPath from './get-wordpress-versions-path.ts'
+import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path.ts'
 
 async function applyToInstances(phpInstances: NodePHP[], callback: Function) {
   for (let i = 0; i < phpInstances.length; i++) {

@@ -1,5 +1,5 @@
 import http from 'http'
-import { DEFAULT_PORT } from './constants'
+import { DEFAULT_PORT } from './constants.ts'
 
 class PortFinder {
   static #instance: PortFinder

@@ -1,13 +1,13 @@
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { startServer } from './start-server'
-import { portFinder } from './port-finder'
+import { startServer } from './start-server.ts'
+import { portFinder } from './port-finder.ts'
 import { SupportedPHPVersion } from '@php-wasm/universal'
-import getWpNowConfig, { CliOptions } from './config'
+import getWpNowConfig, { CliOptions } from './config.ts'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
-import { executePHP } from './execute-php'
-import { output } from './output'
-import { isGitHubCodespace } from './github-codespaces'
+import { executePHP } from './execute-php.ts'
+import { output } from './output.ts'
+import { isGitHubCodespace } from './github-codespaces.ts'
 
 function startSpinner(message: string) {
   process.stdout.write(`${message}...\n`)

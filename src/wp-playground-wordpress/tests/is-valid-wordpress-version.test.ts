@@ -1,7 +1,7 @@
 /*
  * Test for isValidWordpressVersion
  */
-import { isValidWordPressVersion } from '../is-valid-wordpress-version'
+import { isValidWordPressVersion } from '../is-valid-wordpress-version.ts'
 
 test('isValidWordPressVersion', () => {
   // Accepted versions

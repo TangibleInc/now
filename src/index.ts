@@ -1,6 +1,6 @@
-import getWpNowConfig from './config'
+import getWpNowConfig from './config.ts'
 export { getWpNowConfig }
 
-export { default as getWpNowPath } from './get-wp-now-path'
-export { startServer } from './start-server'
-export type { WPNowServer } from './start-server'
+export { default as getWpNowPath } from './get-wp-now-path.ts'
+export { startServer } from './start-server.ts'
+export type { WPNowServer } from './start-server.ts'

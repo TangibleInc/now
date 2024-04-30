@@ -1,17 +1,17 @@
 import fs from 'fs'
-import { WPNowOptions } from './config'
+import { WPNowOptions } from './config.ts'
 import { HTTPMethod } from '@php-wasm/universal'
 import express from 'express'
 import compression from 'compression'
 import compressible from 'compressible'
 import fileUpload from 'express-fileupload'
-import { portFinder } from './port-finder'
+import { portFinder } from './port-finder.ts'
 import { NodePHP } from '@php-wasm/node'
 import { isWebContainer } from '@webcontainer/env'
-import startWPNow from './wp-now'
-import { output } from './output'
-import { addTrailingSlash } from './add-trailing-slash'
-import { encodeAsMultipart } from './encode-as-multipart'
+import startWPNow from './wp-now.ts'
+import { output } from './output.ts'
+import { addTrailingSlash } from './add-trailing-slash.ts'
+import { encodeAsMultipart } from './encode-as-multipart.ts'
 
 const requestBodyToBytes = async (req): Promise<Uint8Array> =>
   await new Promise((resolve) => {
