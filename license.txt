@@ -1,4 +1,6 @@
-Forked from https://github.com/WordPress/playground-tools/tree/trunk/packages/now
+Forked from:
+
+[wp-now](https://github.com/WordPress/playground-tools/tree/trunk/packages/now) GPL 2 or later
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
