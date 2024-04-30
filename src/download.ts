@@ -1,240 +1,240 @@
-import followRedirects from 'follow-redirects';
-import fs from 'fs-extra';
-import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
-import { IncomingMessage } from 'http';
-import os from 'os';
-import path from 'path';
-import unzipper from 'unzipper';
+import followRedirects from 'follow-redirects'
+import fs from 'fs-extra'
+import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent'
+import { IncomingMessage } from 'http'
+import os from 'os'
+import path from 'path'
+import unzipper from 'unzipper'
 import {
-	DEFAULT_WORDPRESS_VERSION,
-	SQLITE_FILENAME,
-	SQLITE_URL,
-	WP_CLI_URL,
-} from './constants';
-import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path';
-import getWordpressVersionsPath from './get-wordpress-versions-path';
-import getWpCliPath from './get-wp-cli-path';
-import getWpNowPath from './get-wp-now-path';
-import { output } from './output';
-import { isValidWordPressVersion } from './wp-playground-wordpress';
+  DEFAULT_WORDPRESS_VERSION,
+  SQLITE_FILENAME,
+  SQLITE_URL,
+  WP_CLI_URL,
+} from './constants'
+import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path'
+import getWordpressVersionsPath from './get-wordpress-versions-path'
+import getWpCliPath from './get-wp-cli-path'
+import getWpNowPath from './get-wp-now-path'
+import { output } from './output'
+import { isValidWordPressVersion } from './wp-playground-wordpress'
 
 function httpsGet(url: string, callback: Function) {
-	const proxy =
-		process.env.https_proxy ||
-		process.env.HTTPS_PROXY ||
-		process.env.http_proxy ||
-		process.env.HTTP_PROXY;
+  const proxy =
+    process.env.https_proxy ||
+    process.env.HTTPS_PROXY ||
+    process.env.http_proxy ||
+    process.env.HTTP_PROXY
 
-	let agent: HttpsProxyAgent | HttpProxyAgent | undefined;
+  let agent: HttpsProxyAgent | HttpProxyAgent | undefined
 
-	if (proxy) {
-		const urlParts = new URL(url);
-		const Agent =
-			urlParts.protocol === 'https:' ? HttpsProxyAgent : HttpProxyAgent;
-		agent = new Agent({ proxy });
-	}
+  if (proxy) {
+    const urlParts = new URL(url)
+    const Agent =
+      urlParts.protocol === 'https:' ? HttpsProxyAgent : HttpProxyAgent
+    agent = new Agent({ proxy })
+  }
 
-	https.get(url, { agent }, callback);
+  https.get(url, { agent }, callback)
 }
 
 function getWordPressVersionUrl(version = DEFAULT_WORDPRESS_VERSION) {
-	if (!isValidWordPressVersion(version)) {
-		throw new Error(
-			'Unrecognized WordPress version. Please use "latest", "trunk", "nightly", or numeric versions such as "6.2", "6.0.1", "6.2-beta1", or "6.2-RC1"'
-		);
-	}
-	if (version === 'trunk' || version === 'nightly') {
-		return 'https://wordpress.org/nightly-builds/wordpress-latest.zip';
-	}
-	return `https://wordpress.org/wordpress-${version}.zip`;
+  if (!isValidWordPressVersion(version)) {
+    throw new Error(
+      'Unrecognized WordPress version. Please use "latest", "trunk", "nightly", or numeric versions such as "6.2", "6.0.1", "6.2-beta1", or "6.2-RC1"',
+    )
+  }
+  if (version === 'trunk' || version === 'nightly') {
+    return 'https://wordpress.org/nightly-builds/wordpress-latest.zip'
+  }
+  return `https://wordpress.org/wordpress-${version}.zip`
 }
 
 interface DownloadFileAndUnzipResult {
-	downloaded: boolean;
-	statusCode: number;
+  downloaded: boolean
+  statusCode: number
 }
 
-followRedirects.maxRedirects = 5;
-const { https } = followRedirects;
+followRedirects.maxRedirects = 5
+const { https } = followRedirects
 
 async function downloadFile({
-	url,
-	destinationFilePath,
-	itemName,
+  url,
+  destinationFilePath,
+  itemName,
 }): Promise<DownloadFileAndUnzipResult> {
-	let statusCode = 0;
-	try {
-		if (fs.existsSync(destinationFilePath)) {
-			return { downloaded: false, statusCode: 0 };
-		}
-		fs.ensureDirSync(path.dirname(destinationFilePath));
-		const response = await new Promise<IncomingMessage>((resolve) =>
-			httpsGet(url, (response) => resolve(response))
-		);
-		statusCode = response.statusCode;
-		if (response.statusCode !== 200) {
-			throw new Error(
-				`Failed to download file (Status code ${response.statusCode}).`
-			);
-		}
-		await new Promise<void>((resolve, reject) => {
-			fs.ensureFileSync(destinationFilePath);
-			const file = fs.createWriteStream(destinationFilePath);
-			response.pipe(file);
-			file.on('finish', () => {
-				file.close();
-				resolve();
-			});
-			file.on('error', (error) => {
-				file.close();
-				reject(error);
-			});
-		});
-		output?.log(`Downloaded ${itemName} to ${destinationFilePath}`);
-		return { downloaded: true, statusCode };
-	} catch (error) {
-		output?.error(`Error downloading file ${itemName}`, error);
-		return { downloaded: false, statusCode };
-	}
+  let statusCode = 0
+  try {
+    if (fs.existsSync(destinationFilePath)) {
+      return { downloaded: false, statusCode: 0 }
+    }
+    fs.ensureDirSync(path.dirname(destinationFilePath))
+    const response = await new Promise<IncomingMessage>((resolve) =>
+      httpsGet(url, (response) => resolve(response)),
+    )
+    statusCode = response.statusCode
+    if (response.statusCode !== 200) {
+      throw new Error(
+        `Failed to download file (Status code ${response.statusCode}).`,
+      )
+    }
+    await new Promise<void>((resolve, reject) => {
+      fs.ensureFileSync(destinationFilePath)
+      const file = fs.createWriteStream(destinationFilePath)
+      response.pipe(file)
+      file.on('finish', () => {
+        file.close()
+        resolve()
+      })
+      file.on('error', (error) => {
+        file.close()
+        reject(error)
+      })
+    })
+    output?.log(`Downloaded ${itemName} to ${destinationFilePath}`)
+    return { downloaded: true, statusCode }
+  } catch (error) {
+    output?.error(`Error downloading file ${itemName}`, error)
+    return { downloaded: false, statusCode }
+  }
 }
 
 export async function downloadWPCLI() {
-	return downloadFile({
-		url: WP_CLI_URL,
-		destinationFilePath: getWpCliPath(),
-		itemName: 'wp-cli',
-	});
+  return downloadFile({
+    url: WP_CLI_URL,
+    destinationFilePath: getWpCliPath(),
+    itemName: 'wp-cli',
+  })
 }
 
 async function downloadFileAndUnzip({
-	url,
-	destinationFolder,
-	checkFinalPath,
-	itemName,
+  url,
+  destinationFolder,
+  checkFinalPath,
+  itemName,
 }): Promise<DownloadFileAndUnzipResult> {
-	if (
-		fs.existsSync(checkFinalPath) &&
-		fs.readdirSync(checkFinalPath).length > 0
-	) {
-		output?.log(`${itemName} folder already exists. Skipping download.`);
-		return { downloaded: false, statusCode: 0 };
-	}
+  if (
+    fs.existsSync(checkFinalPath) &&
+    fs.readdirSync(checkFinalPath).length > 0
+  ) {
+    output?.log(`${itemName} folder already exists. Skipping download.`)
+    return { downloaded: false, statusCode: 0 }
+  }
 
-	let statusCode = 0;
+  let statusCode = 0
 
-	try {
-		fs.ensureDirSync(path.dirname(destinationFolder));
+  try {
+    fs.ensureDirSync(path.dirname(destinationFolder))
 
-		output?.log(`Downloading ${itemName}...`);
-		const response = await new Promise<IncomingMessage>((resolve) =>
-			httpsGet(url, (response) => resolve(response))
-		);
-		statusCode = response.statusCode;
+    output?.log(`Downloading ${itemName}...`)
+    const response = await new Promise<IncomingMessage>((resolve) =>
+      httpsGet(url, (response) => resolve(response)),
+    )
+    statusCode = response.statusCode
 
-		if (response.statusCode !== 200) {
-			throw new Error(
-				`Failed to download file (Status code ${response.statusCode}).`
-			);
-		}
+    if (response.statusCode !== 200) {
+      throw new Error(
+        `Failed to download file (Status code ${response.statusCode}).`,
+      )
+    }
 
-		const entryPromises: Promise<unknown>[] = [];
+    const entryPromises: Promise<unknown>[] = []
 
-		/**
-		 * Using Parse because Extract is broken:
-		 * https://github.com/WordPress/wordpress-playground/issues/248
-		 */
-		await response
-			.pipe(unzipper.Parse())
-			.on('entry', (entry) => {
-				const filePath = path.join(destinationFolder, entry.path);
-				/*
-				 * Use the sync version to ensure entry is piped to
-				 * a write stream before moving on to the next entry.
-				 */
-				fs.ensureDirSync(path.dirname(filePath));
+    /**
+     * Using Parse because Extract is broken:
+     * https://github.com/WordPress/wordpress-playground/issues/248
+     */
+    await response
+      .pipe(unzipper.Parse())
+      .on('entry', (entry) => {
+        const filePath = path.join(destinationFolder, entry.path)
+        /*
+         * Use the sync version to ensure entry is piped to
+         * a write stream before moving on to the next entry.
+         */
+        fs.ensureDirSync(path.dirname(filePath))
 
-				if (entry.type === 'File') {
-					const promise = new Promise((resolve, reject) => {
-						entry
-							.pipe(fs.createWriteStream(filePath))
-							.on('close', resolve)
-							.on('error', reject);
-					});
-					entryPromises.push(promise);
-				} else {
-					entryPromises.push(entry.autodrain().promise());
-				}
-			})
-			.promise();
+        if (entry.type === 'File') {
+          const promise = new Promise((resolve, reject) => {
+            entry
+              .pipe(fs.createWriteStream(filePath))
+              .on('close', resolve)
+              .on('error', reject)
+          })
+          entryPromises.push(promise)
+        } else {
+          entryPromises.push(entry.autodrain().promise())
+        }
+      })
+      .promise()
 
-		// Wait until all entries have been extracted before continuing
-		await Promise.all(entryPromises);
+    // Wait until all entries have been extracted before continuing
+    await Promise.all(entryPromises)
 
-		return { downloaded: true, statusCode };
-	} catch (err) {
-		output?.error(`Error downloading or unzipping ${itemName}:`, err);
-	}
-	return { downloaded: false, statusCode };
+    return { downloaded: true, statusCode }
+  } catch (err) {
+    output?.error(`Error downloading or unzipping ${itemName}:`, err)
+  }
+  return { downloaded: false, statusCode }
 }
 
 export async function downloadWordPress(
-	wordPressVersion = DEFAULT_WORDPRESS_VERSION
+  wordPressVersion = DEFAULT_WORDPRESS_VERSION,
 ) {
-	const finalFolder = path.join(getWordpressVersionsPath(), wordPressVersion);
-	const tempFolder = os.tmpdir();
-	const { downloaded, statusCode } = await downloadFileAndUnzip({
-		url: getWordPressVersionUrl(wordPressVersion),
-		destinationFolder: tempFolder,
-		checkFinalPath: finalFolder,
-		itemName: `WordPress ${wordPressVersion}`,
-	});
-	if (downloaded) {
-		fs.ensureDirSync(path.dirname(finalFolder));
-		fs.moveSync(path.join(tempFolder, 'wordpress'), finalFolder, {
-			overwrite: true,
-		});
-	} else if (404 === statusCode) {
-		output?.log(
-			`WordPress ${wordPressVersion} not found. Check https://wordpress.org/download/releases/ for available versions.`
-		);
-		process.exit(1);
-	}
+  const finalFolder = path.join(getWordpressVersionsPath(), wordPressVersion)
+  const tempFolder = os.tmpdir()
+  const { downloaded, statusCode } = await downloadFileAndUnzip({
+    url: getWordPressVersionUrl(wordPressVersion),
+    destinationFolder: tempFolder,
+    checkFinalPath: finalFolder,
+    itemName: `WordPress ${wordPressVersion}`,
+  })
+  if (downloaded) {
+    fs.ensureDirSync(path.dirname(finalFolder))
+    fs.moveSync(path.join(tempFolder, 'wordpress'), finalFolder, {
+      overwrite: true,
+    })
+  } else if (404 === statusCode) {
+    output?.log(
+      `WordPress ${wordPressVersion} not found. Check https://wordpress.org/download/releases/ for available versions.`,
+    )
+    process.exit(1)
+  }
 }
 
 export async function downloadSqliteIntegrationPlugin() {
-	// Remove the old SQLite plugin if it exists
-	const oldSqlitePath = path.join(getWpNowPath(), `${SQLITE_FILENAME}`);
-	if (fs.existsSync(oldSqlitePath)) {
-		fs.rmSync(oldSqlitePath, {
-			recursive: true,
-		});
-	}
+  // Remove the old SQLite plugin if it exists
+  const oldSqlitePath = path.join(getWpNowPath(), `${SQLITE_FILENAME}`)
+  if (fs.existsSync(oldSqlitePath)) {
+    fs.rmSync(oldSqlitePath, {
+      recursive: true,
+    })
+  }
 
-	await downloadFileAndUnzip({
-		url: SQLITE_URL,
-		destinationFolder: path.join(getWpNowPath(), 'mu-plugins'),
-		checkFinalPath: getSqlitePath(),
-		itemName: 'SQLite',
-	});
+  await downloadFileAndUnzip({
+    url: SQLITE_URL,
+    destinationFolder: path.join(getWpNowPath(), 'mu-plugins'),
+    checkFinalPath: getSqlitePath(),
+    itemName: 'SQLite',
+  })
 
-	// Replace {SQLITE_IMPLEMENTATION_FOLDER_PATH} with the actual path
-	const dbCopyContent = fs.readFileSync(getSqliteDbCopyPath()).toString();
-	if (dbCopyContent.includes("'{SQLITE_IMPLEMENTATION_FOLDER_PATH}'")) {
-		fs.writeFileSync(
-			getSqliteDbCopyPath(),
-			dbCopyContent.replace(
-				"'{SQLITE_IMPLEMENTATION_FOLDER_PATH}'",
-				`realpath( __DIR__ . '/mu-plugins/${SQLITE_FILENAME}' )`
-			)
-		);
-	}
+  // Replace {SQLITE_IMPLEMENTATION_FOLDER_PATH} with the actual path
+  const dbCopyContent = fs.readFileSync(getSqliteDbCopyPath()).toString()
+  if (dbCopyContent.includes("'{SQLITE_IMPLEMENTATION_FOLDER_PATH}'")) {
+    fs.writeFileSync(
+      getSqliteDbCopyPath(),
+      dbCopyContent.replace(
+        "'{SQLITE_IMPLEMENTATION_FOLDER_PATH}'",
+        `realpath( __DIR__ . '/mu-plugins/${SQLITE_FILENAME}' )`,
+      ),
+    )
+  }
 }
 
 export async function downloadMuPlugins() {
-	fs.ensureDirSync(path.join(getWpNowPath(), 'mu-plugins'));
-	fs.writeFile(
-		path.join(getWpNowPath(), 'mu-plugins', '0-allow-wp-org.php'),
-		`<?php
+  fs.ensureDirSync(path.join(getWpNowPath(), 'mu-plugins'))
+  fs.writeFile(
+    path.join(getWpNowPath(), 'mu-plugins', '0-allow-wp-org.php'),
+    `<?php
 	// Needed because gethostbyname( 'wordpress.org' ) returns
 	// a private network IP address for some reason.
 	add_filter( 'allowed_redirect_hosts', function( $deprecated = '' ) {
@@ -243,21 +243,17 @@ export async function downloadMuPlugins() {
 			'api.wordpress.org',
 			'downloads.wordpress.org',
 		);
-	} );`
-	);
-	fs.writeFile(
-		path.join(getWpNowPath(), 'mu-plugins', '1-pretty-permalinks.php'),
-		`<?php
+	} );`,
+  )
+  fs.writeFile(
+    path.join(getWpNowPath(), 'mu-plugins', '1-pretty-permalinks.php'),
+    `<?php
 	// Support permalinks without "index.php"
-	add_filter( 'got_url_rewrite', '__return_true' );`
-	);
-	fs.writeFile(
-		path.join(
-			getWpNowPath(),
-			'mu-plugins',
-			'2-deactivate-sqlite-plugin.php'
-		),
-		`<?php
+	add_filter( 'got_url_rewrite', '__return_true' );`,
+  )
+  fs.writeFile(
+    path.join(getWpNowPath(), 'mu-plugins', '2-deactivate-sqlite-plugin.php'),
+    `<?php
 	add_action(
 		'admin_footer',
 		function() {
@@ -266,6 +262,6 @@ export async function downloadMuPlugins() {
 			}
 			// The SQLite plugin is automatically activated, but wp-now use it as a a mu-plugin, so we need to deactivate it to prevent notices.
 			deactivate_plugins( 'sqlite-database-integration/load.php' );
-	}, 100 );`
-	);
+	}, 100 );`,
+  )
 }

@@ -4,14 +4,14 @@
  * @returns  - Returns a middleware function that may redirect adding a trailing slash to the given path. E.g. '/wp-admin/'
  */
 export function addTrailingSlash(path) {
-	return (req, res, next) => {
-		const urlParts = req.url.split('?');
-		const url = urlParts[0];
-		const queryString = req.url.substr(url.length);
-		if (url === path) {
-			res.redirect(301, `${path}/${queryString}`);
-		} else {
-			next();
-		}
-	};
+  return (req, res, next) => {
+    const urlParts = req.url.split('?')
+    const url = urlParts[0]
+    const queryString = req.url.substr(url.length)
+    if (url === path) {
+      res.redirect(301, `${path}/${queryString}`)
+    } else {
+      next()
+    }
+  }
 }

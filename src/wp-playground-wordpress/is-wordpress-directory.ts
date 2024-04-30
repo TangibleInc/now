@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
-import path from 'path';
+import fs from 'fs-extra'
+import path from 'path'
 
 /**
  * Checks if the given path is a WordPress directory.
@@ -8,9 +8,9 @@ import path from 'path';
  * @returns Is it a WordPress directory?
  */
 export function isWordPressDirectory(projectPath: string): Boolean {
-	return (
-		fs.existsSync(path.join(projectPath, 'wp-content')) &&
-		fs.existsSync(path.join(projectPath, 'wp-includes')) &&
-		fs.existsSync(path.join(projectPath, 'wp-load.php'))
-	);
+  return (
+    fs.existsSync(path.join(projectPath, 'wp-content')) &&
+    fs.existsSync(path.join(projectPath, 'wp-includes')) &&
+    fs.existsSync(path.join(projectPath, 'wp-load.php'))
+  )
 }

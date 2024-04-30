@@ -1,8 +1,8 @@
 # @tangible/now
 
-> Standalone command-line tool for running local WordPress sites
+> Standalone command-line tool to manage local WordPress sites
 
-This is a fork of [`wp-now`](https://github.com/WordPress/playground-tools/tree/trunk/packages/wp-now).
+This is a fork of [`wp-now`](https://github.com/WordPress/playground-tools/tree/trunk/packages/wp-now), customized for local development and testing purpose.
 
 ## Changes
 
@@ -12,9 +12,9 @@ This is a fork of [`wp-now`](https://github.com/WordPress/playground-tools/tree/
 
   Currently using `@yao-pkg/pkg` which only supports CommonJS, not ES Modules.
 
-- [ ] Load compatible configuration from `.wp-env.json` and `.wp-env.override.json`
-  - [ ] Port
-  - [ ] Mappings: Mount directories from local file system, such as vendor plugins
+- [x] Load compatible configuration from `.wp-env.json` and `.wp-env.override.json`
+  - [x] Port
+  - [x] Mappings: Mount directories from local file system, such as vendor plugins
 
 ## How it started
 
