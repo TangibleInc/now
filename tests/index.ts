@@ -13,14 +13,20 @@ test('wp-now', async () => {
 
   const testsFolder = process.cwd() // path.join(process.cwd(), 'tests')
   await startServer(await getWpNowConfig({
-    path: testsFolder
+    path: testsFolder,
+    silence: true
   }))
 
   ok(true, 'starts')
 
-  const result = await (await fetch(`http://localhost:${wpEnvOptions.port}`)).text()
+  let result = await (await fetch(`http://localhost:${wpEnvOptions.port}`)).text()
+  let expected = '<!doc'
+  is(expected, result.slice(0, expected.length).toLowerCase(), 'responds with HTML document')
 
-  is('<!doc', result.slice(0, 5).toLowerCase(), 'responds with HTML document')
+  result = await (await fetch(`http://localhost:${wpEnvOptions.port}/wp-content/test/php-version.php`)).text()
+  expected = 'php version'
+  is(expected, result.slice(0, expected.length).toLowerCase(), 'run test file from mounted local folder')
+  console.log(result)
 
 })
 

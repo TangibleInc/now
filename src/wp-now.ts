@@ -116,7 +116,7 @@ export default async function startWPNow(
 
   if (options.mappings) {
     for (const [key, value] of Object.entries(options.mappings)) {
-      console.log(`mapping: ${key} -> ${value}`)
+      output?.log(`mapping: ${key} -> ${value}`)
       await php.mount(value, `${documentRoot}/${key}`)
     }
   }
