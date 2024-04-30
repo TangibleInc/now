@@ -4,22 +4,18 @@
   "description": "Standalone command-line tool to manage local WordPress sites",
   "main": "main.js",
   "bin": {
-    "now": "build/esm/main.js"
+    "wp-now": "build/esm/main.js"
   },
   "scripts": {
-    "start": "tsx src/main.ts start",
-    "pack": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js",
-    "start:bun": "NODE_ENV=development bun --hot run src/main.ts start",
+    "start": "cd tests && tsx ../src/main.ts start --silence",
     "build": "mkdir -p build && npm run clean && npm run build:esm && npm run build:cjs",
     "build:cjs": "bun build.ts cjs",
     "build:esm": "bun build.ts esm",
     "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/*",
     "format": "prettier --no-config --no-semi --single-quote --write src",
-    "release": "npm run build && npm publish --access public"
+    "release": "npm run build && npm publish --access public",
+    "build:bin": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js && bun build.ts bin"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
   "pkg": {
     "assets": [
       "node_modules/@php-wasm/node/8_0_30/**",
@@ -45,5 +41,8 @@
     "@yao-pkg/pkg": "^5.11.5",
     "globby": "^14.0.1",
     "tsx": "^4.7.3"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-2.0-or-later"
 }

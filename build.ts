@@ -10,10 +10,33 @@ const isDev = command === 'dev'
 
 if (isDev) command = args.shift() // Optional: cjs, esm, web
 
+async function fileExists(file: string): Promise<boolean> {
+  try {
+    await fs.access(file)
+    return true
+  } catch(e) {
+    return false
+  }
+}
+
 ;(async () => {
 
   // const { name } = JSON.parse(await fs.readFile('./package.json'))
   const name = 'now'
+
+  if (command==='bin') {
+    if (!await fileExists('releases/@tangible')) {
+      console.log('Build binaries first: npm run build:bin')
+      return
+    }
+    for (const file of await globby('releases/@tangible/*')) {
+      const target =  `releases/${file.split('/').pop()}`
+      console.log(target)
+      await fs.rename(file, target)
+    }
+    await fs.rmdir('releases/@tangible')
+    return
+  }
 
   const entryFile = 'src/index.ts'
   await fs.writeFile(entryFile,
