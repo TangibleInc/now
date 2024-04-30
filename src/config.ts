@@ -119,7 +119,13 @@ export default async function getWpNowConfig(
   const wpEnv: WPEnvOptions = {}
   for (const file of ['.wp-env.json', '.wp-env.override.json']) {
     try {
-      Object.assign(wpEnv, await fs.readJson(file))
+      const config = await fs.readJson(file)
+      Object.assign(wpEnv, config, {
+        mappings: {
+          ...wpEnv.mappings,
+          ...config.mappings,
+        },
+      })
     } catch (e) {
       continue
     }
