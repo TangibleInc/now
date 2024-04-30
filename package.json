@@ -1,11 +1,11 @@
 {
   "name": "@tangible/now",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Standalone command-line tool to manage local WordPress sites",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
   "bin": {
-    "wp-now": "build/esm/main.js"
+    "wp-now": "run"
   },
   "scripts": {
     "start": "cd tests && tsx ../src/main.ts start --open",

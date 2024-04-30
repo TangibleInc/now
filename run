@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+;(async () => {
+  await import('./build/esm/main.js')
+})().catch(console.error)
