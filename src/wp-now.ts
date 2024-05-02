@@ -116,8 +116,13 @@ export default async function startWPNow(
 
   if (options.mappings) {
     for (const [key, value] of Object.entries(options.mappings)) {
-      output?.log(`mapping: ${key} -> ${value}`)
-      await php.mount(value, `${documentRoot}/${key}`)
+      const localPath = path.join(options.projectPath || process.cwd(), value)
+      if (fs.existsSync(localPath)) {
+        output?.log(`mapping: ${key} -> ${value}`)
+        php.mount(localPath, `${documentRoot}/${key}`)
+      } else {
+        output?.log(`mapping: ${key} -> ${value} (not found)`)
+      }
     }
   }
 

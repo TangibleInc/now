@@ -115,11 +115,13 @@ function getWpContentHomePath(projectPath: string, mode: string) {
 export default async function getWpNowConfig(
   args: CliOptions,
 ): Promise<WPNowOptions> {
+  const projectPath = (args.path || DEFAULT_OPTIONS.projectPath) as string
+
   // Options from wp-env config files
   const wpEnv: WPEnvOptions = {}
   for (const file of ['.wp-env.json', '.wp-env.override.json']) {
     try {
-      const config = await fs.readJson(file)
+      const config = await fs.readJson(path.join(projectPath, file))
       Object.assign(wpEnv, config, {
         mappings: {
           ...wpEnv.mappings,
@@ -139,7 +141,7 @@ export default async function getWpNowConfig(
 
   const optionsFromCli: WPNowOptions = {
     phpVersion: args.php as SupportedPHPVersion,
-    projectPath: args.path as string,
+    projectPath,
     wordPressVersion: args.wp as string,
     port,
     reset: args.reset as boolean,
