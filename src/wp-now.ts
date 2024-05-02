@@ -65,10 +65,10 @@ export default async function startWPNow(
     disableOutput()
   }
 
-  output?.log(`directory: ${options.projectPath}`)
+  output?.log(`Project path: ${options.projectPath}`)
 
-  output?.log(`mode: ${options.mode}`)
-  output?.log(`php: ${options.phpVersion}`)
+  output?.log(`Mode: ${options.mode}`)
+  output?.log(`PHP: ${options.phpVersion}`)
   if (options.mode === WPNowMode.INDEX) {
     await applyToInstances(phpInstances, async (_php) => {
       runIndexMode(_php, options)
@@ -78,7 +78,7 @@ export default async function startWPNow(
   if (options.wordPressVersion === 'trunk') {
     options.wordPressVersion = 'nightly'
   }
-  output?.log(`wp: ${options.wordPressVersion}`)
+  output?.log(`WordPress: ${options.wordPressVersion}`)
   await Promise.all([
     downloadWordPress(options.wordPressVersion),
     downloadMuPlugins(),
@@ -118,10 +118,10 @@ export default async function startWPNow(
     for (const [key, value] of Object.entries(options.mappings)) {
       const localPath = path.join(options.projectPath || process.cwd(), value)
       if (fs.existsSync(localPath)) {
-        output?.log(`mapping: ${key} -> ${value}`)
+        output?.log(`Mapping: ${key} -> ${value}`)
         php.mount(localPath, `${documentRoot}/${key}`)
       } else {
-        output?.log(`mapping: ${key} -> ${value} (not found)`)
+        output?.log(`Mapping: ${key} -> ${value} (Not found)`)
       }
     }
   }
