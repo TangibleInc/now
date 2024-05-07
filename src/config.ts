@@ -133,6 +133,16 @@ export default async function getWpNowConfig(
     }
   }
 
+  if (args.mappings) {
+    // Mappings given directly has priority
+    Object.assign(wpEnv, {
+      mappings: {
+        ...wpEnv.mappings,
+        ...args.mappings,
+      },
+    })
+  }
+
   if (args.port || wpEnv.port) {
     portFinder.setPort(args.port || wpEnv.port)
   }
