@@ -1,6 +1,6 @@
 {
   "name": "@tangible/now",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Standalone command-line tool to manage local WordPress sites",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
