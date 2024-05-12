@@ -49,7 +49,11 @@ export async function startServer(
   app.use(compression({ filter: shouldCompress }))
   app.use(addTrailingSlash('/wp-admin'))
   const port = await portFinder.getOpenPort()
-  const { php, options: wpNowOptions } = await startWPNow(options)
+  const {
+    php,
+    requestHandler,
+    options: wpNowOptions,
+  } = await startWPNow(options)
 
   app.use('/', async (req, res) => {
     try {
@@ -87,7 +91,7 @@ export async function startServer(
         data.headers['origin'] = options.absoluteUrl
       }
 
-      const resp = await php.requestHandler?.request(data)
+      const resp = await requestHandler.request(data) // await php.requestHandler?.request(data)
       res.statusCode = resp.httpStatusCode
       Object.keys(resp.headers).forEach((key) => {
         res.setHeader(key, resp.headers[key])

@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
-import { NodePHP, PHPLoaderOptions } from '@php-wasm/node'
 import path from 'path'
+import { NodePHP, PHPLoaderOptions } from '@php-wasm/node'
+import { PHPRequestHandler } from '@php-wasm/universal'
 import { SQLITE_FILENAME } from './constants.ts'
 import {
   downloadMuPlugins,
@@ -27,7 +28,7 @@ import {
   getPluginFile,
   readFileHead,
 } from './wp-playground-wordpress/index.ts'
-import { output, disableOutput } from './output.ts'
+import { output, disableOutput, enableOutput } from './output.ts'
 import getWpNowPath from './get-wp-now-path.ts'
 import getWordpressVersionsPath from './get-wordpress-versions-path.ts'
 import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path.ts'
@@ -49,11 +50,28 @@ export default async function startWPNow(
     },
   }
 
+  /**
+   * Prepare to upgrade to @php-wasm/node 0.7.15, where PHP.request() is deprecated.
+   * Waiting for now because login() from blueprints is still calling it.
+   */
+
+  // const requestHandler = new PHPRequestHandler({
+  //   phpFactory: () => NodePHP.load(options.phpVersion, nodePHPOptions),
+  //   documentRoot, // : '/var/www',
+  //   maxPhpInstances: 1, // options.numberOfPhpInstances
+  //   absoluteUrl: options.absoluteUrl, // : 'http://127.0.0.1',
+  // })
+  // const php = await requestHandler.getPrimaryPhp()
+  // const phpInstances = [php]
+
+  // Replace this -->
   const phpInstances = []
   for (let i = 0; i < Math.max(options.numberOfPhpInstances, 1); i++) {
     phpInstances.push(await NodePHP.load(options.phpVersion, nodePHPOptions))
   }
   const php = phpInstances[0]
+  const requestHandler = php
+  // <--
 
   phpInstances.forEach((_php) => {
     _php.mkdirTree(documentRoot)
@@ -73,7 +91,7 @@ export default async function startWPNow(
     await applyToInstances(phpInstances, async (_php) => {
       runIndexMode(_php, options)
     })
-    return { php, phpInstances, options }
+    return { php, phpInstances, requestHandler, options }
   }
   if (options.wordPressVersion === 'trunk') {
     options.wordPressVersion = 'nightly'
@@ -138,7 +156,7 @@ export default async function startWPNow(
     await runBlueprintSteps(compiled, php)
   }
 
-  await installationStep2(php)
+  await installationStep2(php, requestHandler)
   try {
     await login(php, {
       username: 'admin',
@@ -160,6 +178,7 @@ export default async function startWPNow(
   return {
     php,
     phpInstances,
+    requestHandler,
     options,
   }
 }
@@ -418,8 +437,12 @@ export function inferMode(
   return WPNowMode.PLAYGROUND
 }
 
-async function installationStep2(php: NodePHP) {
-  return php.requestHandler?.request({
+async function installationStep2(
+  php: NodePHP,
+  requestHandler: PHPRequestHandler,
+) {
+  return requestHandler.request({
+    // php.requestHandler?.request({
     url: '/wp-admin/install.php?step=2',
     method: 'POST',
     body: {
