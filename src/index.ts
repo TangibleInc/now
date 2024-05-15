@@ -3,4 +3,5 @@ export { getWpNowConfig }
 
 export { default as getWpNowPath } from './get-wp-now-path.ts'
 export { startServer } from './start-server.ts'
+export type { WPNowOptions } from './config.ts'
 export type { WPNowServer } from './start-server.ts'

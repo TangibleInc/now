@@ -39,9 +39,12 @@ async function applyToInstances(phpInstances: NodePHP[], callback: Function) {
   }
 }
 
-export default async function startWPNow(
-  options: Partial<WPNowOptions> = {},
-): Promise<{ php: NodePHP; phpInstances: NodePHP[]; options: WPNowOptions }> {
+export default async function startWPNow(options: WPNowOptions = {}): Promise<{
+  php: NodePHP
+  phpInstances: NodePHP[]
+  options: WPNowOptions
+  requestHandler: PHPRequestHandler
+}> {
   const { documentRoot } = options
   const nodePHPOptions: PHPLoaderOptions = {
     requestHandler: {
@@ -134,7 +137,7 @@ export default async function startWPNow(
 
   if (options.mappings) {
     for (const [key, value] of Object.entries(options.mappings)) {
-      const localPath = value.startsWith('/')
+      const localPath: string = value.startsWith('/')
         ? value
         : path.join(options.projectPath || process.cwd(), value)
       if (fs.existsSync(localPath)) {
@@ -369,7 +372,7 @@ async function activatePluginOrTheme(
   }
 }
 
-export function getThemeTemplate(projectPath: string) {
+export function getThemeTemplate(projectPath: string): string | void {
   const themeTemplateRegex = /^(?:[ \t]*<\?php)?[ \t/*#@]*Template:(.*)$/im
   const styleCSS = readFileHead(path.join(projectPath, 'style.css'))
   if (themeTemplateRegex.test(styleCSS)) {

@@ -1,3 +1,4 @@
+import type { Express } from 'express'
 /**
  * Encodes the Express request with files into multipart/form-data request body.
  * Adaptation of https://github.com/WordPress/wordpress-playground/blob/45bf16970867cc6f23738224dacf201905adcab6/packages/php-wasm/universal/src/lib/encode-as-multipart.ts
@@ -18,7 +19,10 @@ export async function encodeAsMultipart(req: Express.Request) {
     parts.push(`\r\n`)
   }
   const files = req.files ?? {}
-  for (const [name, value] of Object.entries(files)) {
+  for (const [name, value] of Object.entries<{
+    name: string
+    data: string
+  }>(files)) {
     if (!Array.isArray(value)) {
       parts.push(`--${boundary}\r\n`)
       parts.push(`Content-Disposition: form-data; name="${name}"`)

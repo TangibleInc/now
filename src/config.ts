@@ -23,6 +23,9 @@ export interface CliOptions {
   reset?: boolean
   silence?: boolean
   open?: boolean
+  mappings?: {
+    [target: string]: string
+  }
 }
 
 export const enum WPNowMode {
@@ -51,6 +54,9 @@ export interface WPNowOptions {
   landingPage?: string
   open?: boolean
   silence?: boolean
+  mappings?: {
+    [target: string]: string
+  }
 }
 
 export const DEFAULT_OPTIONS: WPNowOptions = {
@@ -118,7 +124,7 @@ export default async function getWpNowConfig(
   const projectPath = (args.path || DEFAULT_OPTIONS.projectPath) as string
 
   // Options from wp-env config files
-  const wpEnv: WPEnvOptions = {}
+  const wpEnv: Partial<WPEnvOptions> = {}
   for (const file of ['.wp-env.json', '.wp-env.override.json']) {
     try {
       const config = await fs.readJson(path.join(projectPath, file))
