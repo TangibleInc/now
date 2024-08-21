@@ -58,22 +58,22 @@ export default async function startWPNow(options: WPNowOptions = {}): Promise<{
    * Waiting for now because login() from blueprints is still calling it.
    */
 
-  // const requestHandler = new PHPRequestHandler({
-  //   phpFactory: () => NodePHP.load(options.phpVersion, nodePHPOptions),
-  //   documentRoot, // : '/var/www',
-  //   maxPhpInstances: 1, // options.numberOfPhpInstances
-  //   absoluteUrl: options.absoluteUrl, // : 'http://127.0.0.1',
-  // })
-  // const php = await requestHandler.getPrimaryPhp()
-  // const phpInstances = [php]
+  const requestHandler = new PHPRequestHandler({
+    phpFactory: () => NodePHP.load(options.phpVersion, nodePHPOptions),
+    documentRoot, // : '/var/www',
+    maxPhpInstances: 1, // options.numberOfPhpInstances
+    absoluteUrl: options.absoluteUrl, // : 'http://127.0.0.1',
+  })
+  const php = await requestHandler.getPrimaryPhp()
+  const phpInstances = [php]
 
   // Replace this -->
-  const phpInstances = []
-  for (let i = 0; i < Math.max(options.numberOfPhpInstances, 1); i++) {
-    phpInstances.push(await NodePHP.load(options.phpVersion, nodePHPOptions))
-  }
-  const php = phpInstances[0]
-  const requestHandler = php
+  // const phpInstances = []
+  // for (let i = 0; i < Math.max(options.numberOfPhpInstances, 1); i++) {
+  //   phpInstances.push(await NodePHP.load(options.phpVersion, nodePHPOptions))
+  // }
+  // const php = phpInstances[0]
+  // const requestHandler = php
   // <--
 
   phpInstances.forEach((_php) => {
@@ -161,10 +161,19 @@ export default async function startWPNow(options: WPNowOptions = {}): Promise<{
 
   await installationStep2(php, requestHandler)
   try {
+    /**
+     * TODO: Remove this workaround for console when blueprint login step uses
+     * PHPRequestHandler instead of PHP.request() which logs deprecation notice.
+     */
+    const _ = console.warn
+    console.warn = () => {}
+
     await login(php, {
       username: 'admin',
       password: 'password',
     })
+
+    console.warn = _
   } catch (e) {
     // It's okay if the user customized the username and password
     // and the login fails now.
