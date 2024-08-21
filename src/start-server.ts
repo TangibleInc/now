@@ -1,17 +1,15 @@
 import fs from 'fs'
-import { WPNowOptions } from './config.ts'
+import { WPNowOptions } from './config'
 import { HTTPMethod } from '@php-wasm/universal'
 import express from 'express'
 import compression from 'compression'
 import compressible from 'compressible'
-import fileUpload from 'express-fileupload'
-import { portFinder } from './port-finder.ts'
+import { portFinder } from './port-finder'
 import { NodePHP } from '@php-wasm/node'
 import { isWebContainer } from '@webcontainer/env'
-import startWPNow from './wp-now.ts'
-import { output } from './output.ts'
-import { addTrailingSlash } from './add-trailing-slash.ts'
-import { encodeAsMultipart } from './encode-as-multipart.ts'
+import startWPNow from './wp-now'
+import { output } from './output'
+import { addTrailingSlash } from './add-trailing-slash'
 
 const requestBodyToBytes = async (req): Promise<Uint8Array> =>
   await new Promise((resolve) => {
@@ -43,17 +41,11 @@ export async function startServer(
   if (!fs.existsSync(options.projectPath)) {
     throw new Error(`The given path "${options.projectPath}" does not exist.`)
   }
-
   const app = express()
-  app.use(fileUpload())
   app.use(compression({ filter: shouldCompress }))
   app.use(addTrailingSlash('/wp-admin'))
   const port = await portFinder.getOpenPort()
-  const {
-    php,
-    requestHandler,
-    options: wpNowOptions,
-  } = await startWPNow(options)
+  const { php, options: wpNowOptions } = await startWPNow(options)
 
   app.use('/', async (req, res) => {
     try {
@@ -65,19 +57,11 @@ export async function startServer(
         }
       }
 
-      let body: Uint8Array
-      if (requestHeaders['content-type']?.startsWith('multipart/form-data')) {
-        const multipart = await encodeAsMultipart(req)
-        body = multipart.bytes
-        requestHeaders['content-type'] = multipart.contentType
-      } else {
-        body = await requestBodyToBytes(req)
-      }
       const data = {
         url: req.url,
         headers: requestHeaders,
         method: req.method as HTTPMethod,
-        body,
+        body: await requestBodyToBytes(req),
       }
 
       if (isWebContainer()) {
@@ -91,7 +75,7 @@ export async function startServer(
         data.headers['origin'] = options.absoluteUrl
       }
 
-      const resp = await requestHandler.request(data) // await php.requestHandler?.request(data)
+      const resp = await php.request(data)
       res.statusCode = resp.httpStatusCode
       Object.keys(resp.headers).forEach((key) => {
         res.setHeader(key, resp.headers[key])

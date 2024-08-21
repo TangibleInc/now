@@ -1,13 +1,13 @@
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { startServer } from './start-server.ts'
-import { portFinder } from './port-finder.ts'
+import { startServer } from './start-server'
+import { portFinder } from './port-finder'
 import { SupportedPHPVersion } from '@php-wasm/universal'
-import getWpNowConfig, { CliOptions } from './config.ts'
+import getWpNowConfig, { CliOptions } from './config'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
-import { executePHP } from './execute-php.ts'
-import { output } from './output.ts'
-import { isGitHubCodespace } from './github-codespaces.ts'
+import { executePHP } from './execute-php'
+import { output } from './output'
+import { isGitHubCodespace } from './github-codespaces'
 
 function startSpinner(message: string) {
   process.stdout.write(`${message}...\n`)
@@ -78,11 +78,15 @@ export async function runCli() {
         })
         yargs.option('silence', {
           describe: 'Silence any log messages to console output.',
-          type: 'boolean',
         })
         yargs.option('open', {
           describe: 'Open the site in a browser.',
+          type: 'boolean'
+        })
+        yargs.option('skip-browser', {
+          describe: 'Do not launch the default browser',
           type: 'boolean',
+          default: false,
         })
         yargs.option('inspect', {
           describe: 'Use Node debugging client.',
@@ -126,16 +130,16 @@ export async function runCli() {
           })
           portFinder.setPort(options.port as number)
           const { url } = await startServer(options)
-
+ 
           if (options.open) {
             openInDefaultBrowser(url)
           }
         } catch (error) {
           output?.error(error)
           spinner &&
-            spinner.fail(
-              `Failed to start the server: ${(error as Error).message}`,
-            )
+          spinner.fail(
+            `Failed to start the server: ${(error as Error).message}`,
+          )
         }
       },
     )

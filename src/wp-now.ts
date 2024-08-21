@@ -1,13 +1,13 @@
 import fs from 'fs-extra'
+import { loadNodeRuntime, PHPLoaderOptions } from '@php-wasm/node'
+import { PHP } from '@php-wasm/universal';
 import path from 'path'
-import { NodePHP, PHPLoaderOptions } from '@php-wasm/node'
-import { PHPRequestHandler } from '@php-wasm/universal'
-import { SQLITE_FILENAME } from './constants.ts'
+import { SQLITE_FILENAME } from './constants'
 import {
   downloadMuPlugins,
   downloadSqliteIntegrationPlugin,
   downloadWordPress,
-} from './download.ts'
+} from './download'
 import {
   StepDefinition,
   activatePlugin,
@@ -17,7 +17,7 @@ import {
   login,
   runBlueprintSteps,
 } from '@wp-playground/blueprints'
-import { WPNowOptions, WPNowMode } from './config.ts'
+import { WPNowOptions, WPNowMode } from './config'
 import {
   hasIndexFile,
   isPluginDirectory,
@@ -27,25 +27,24 @@ import {
   isWordPressDevelopDirectory,
   getPluginFile,
   readFileHead,
-} from './wp-playground-wordpress/index.ts'
-import { output, disableOutput, enableOutput } from './output.ts'
-import getWpNowPath from './get-wp-now-path.ts'
-import getWordpressVersionsPath from './get-wordpress-versions-path.ts'
-import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path.ts'
+  resolveWordPressVersion,
+} from './wp-playground-wordpress'
+import { output, disableOutput, enableOutput } from './output'
+import getWpNowPath from './get-wp-now-path'
+import getWordpressVersionsPath from './get-wordpress-versions-path'
+import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path'
 
-async function applyToInstances(phpInstances: NodePHP[], callback: Function) {
+async function applyToInstances(phpInstances: PHP[], callback: Function) {
   for (let i = 0; i < phpInstances.length; i++) {
     await callback(phpInstances[i])
   }
 }
 
-export default async function startWPNow(options: WPNowOptions = {}): Promise<{
-  php: NodePHP
-  phpInstances: NodePHP[]
-  options: WPNowOptions
-  requestHandler: PHPRequestHandler
-}> {
+export default async function startWPNow(
+  options: Partial<WPNowOptions> = {},
+): Promise<{ php: PHP; phpInstances: PHP[]; options: WPNowOptions }> {
   const { documentRoot } = options
+
   const nodePHPOptions: PHPLoaderOptions = {
     requestHandler: {
       documentRoot,
@@ -53,55 +52,44 @@ export default async function startWPNow(options: WPNowOptions = {}): Promise<{
     },
   }
 
-  /**
-   * Prepare to upgrade to @php-wasm/node 0.7.15, where PHP.request() is deprecated.
-   * Waiting for now because login() from blueprints is still calling it.
-   */
-
-  const requestHandler = new PHPRequestHandler({
-    phpFactory: () => NodePHP.load(options.phpVersion, nodePHPOptions),
-    documentRoot, // : '/var/www',
-    maxPhpInstances: 1, // options.numberOfPhpInstances
-    absoluteUrl: options.absoluteUrl, // : 'http://127.0.0.1',
-  })
-  const php = await requestHandler.getPrimaryPhp()
-  const phpInstances = [php]
-
-  // Replace this -->
-  // const phpInstances = []
-  // for (let i = 0; i < Math.max(options.numberOfPhpInstances, 1); i++) {
-  //   phpInstances.push(await NodePHP.load(options.phpVersion, nodePHPOptions))
-  // }
-  // const php = phpInstances[0]
-  // const requestHandler = php
-  // <--
+  const phpInstances = []
+  for (let i = 0; i < Math.max(options.numberOfPhpInstances, 1); i++) {
+    phpInstances.push(new PHP(await loadNodeRuntime(options.phpVersion)))
+  }
+  const php = phpInstances[0]
 
   phpInstances.forEach((_php) => {
     _php.mkdirTree(documentRoot)
     _php.chdir(documentRoot)
     _php.writeFile(`${documentRoot}/index.php`, `<?php echo 'Hello wp-now!';`)
   })
-
   if (options.silence) {
     disableOutput()
   }
-
   output?.log(`Project path: ${options.projectPath}`)
-
   output?.log(`Mode: ${options.mode}`)
   output?.log(`PHP: ${options.phpVersion}`)
   if (options.mode === WPNowMode.INDEX) {
     await applyToInstances(phpInstances, async (_php) => {
       runIndexMode(_php, options)
     })
-    return { php, phpInstances, requestHandler, options }
+    return { php, phpInstances, options }
   }
-  if (options.wordPressVersion === 'trunk') {
-    options.wordPressVersion = 'nightly'
+
+  const { resolvedWordPressVersion, isDeveloperBuild } =
+    await resolveWordPressVersion(options.wordPressVersion)
+
+  let wpVersionOutput = resolvedWordPressVersion
+
+  if (resolvedWordPressVersion !== options.wordPressVersion) {
+    const originalWordPressVersion = options.wordPressVersion
+    options.wordPressVersion = resolvedWordPressVersion
+    wpVersionOutput += ` (resolved from alias: ${originalWordPressVersion})`
   }
-  output?.log(`WordPress: ${options.wordPressVersion}`)
+
+  output?.log(`WordPress: ${wpVersionOutput}`)
   await Promise.all([
-    downloadWordPress(options.wordPressVersion),
+    downloadWordPress(options.wordPressVersion, { isDeveloperBuild }),
     downloadMuPlugins(),
     downloadSqliteIntegrationPlugin(),
   ])
@@ -159,21 +147,12 @@ export default async function startWPNow(options: WPNowOptions = {}): Promise<{
     await runBlueprintSteps(compiled, php)
   }
 
-  await installationStep2(php, requestHandler)
+  await installationStep2(php)
   try {
-    /**
-     * TODO: Remove this workaround for console when blueprint login step uses
-     * PHPRequestHandler instead of PHP.request() which logs deprecation notice.
-     */
-    const _ = console.warn
-    console.warn = () => {}
-
     await login(php, {
       username: 'admin',
       password: 'password',
     })
-
-    console.warn = _
   } catch (e) {
     // It's okay if the user customized the username and password
     // and the login fails now.
@@ -190,7 +169,6 @@ export default async function startWPNow(options: WPNowOptions = {}): Promise<{
   return {
     php,
     phpInstances,
-    requestHandler,
     options,
   }
 }
@@ -381,7 +359,7 @@ async function activatePluginOrTheme(
   }
 }
 
-export function getThemeTemplate(projectPath: string): string | void {
+export function getThemeTemplate(projectPath: string) {
   const themeTemplateRegex = /^(?:[ \t]*<\?php)?[ \t/*#@]*Template:(.*)$/im
   const styleCSS = readFileHead(path.join(projectPath, 'style.css'))
   if (themeTemplateRegex.test(styleCSS)) {
@@ -449,12 +427,8 @@ export function inferMode(
   return WPNowMode.PLAYGROUND
 }
 
-async function installationStep2(
-  php: NodePHP,
-  requestHandler: PHPRequestHandler,
-) {
-  return requestHandler.request({
-    // php.requestHandler?.request({
+async function installationStep2(php: NodePHP) {
+  return php.request({
     url: '/wp-admin/install.php?step=2',
     method: 'POST',
     body: {

@@ -15,7 +15,7 @@
     "build:types": "tsc --project tsconfig.types.json",
     "build:bin": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js && bun build.ts bin",
     "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/* && rm -rf build/types/* && rm build/tsconfig.types.tsbuildinfo",
-    "format": "prettier --no-config --log-level warn --no-semi --single-quote --write src",
+    "format": "prettier --no-config --log-level warn --no-semi --single-quote --write --tab-width 2 --use-tabs false src",
     "test": "cd tests && tsx index.ts",
     "release": "npm run build && npm publish --access public"
   },
@@ -63,6 +63,7 @@
     "@yao-pkg/pkg": "^5.12.1",
     "esbuild": "^0.23.1",
     "globby": "^14.0.2",
+    "prettier": "^3.3.3",
     "testra": "^2.1.4",
     "tsx": "^4.17.0"
   },
