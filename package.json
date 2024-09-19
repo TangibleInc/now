@@ -43,15 +43,18 @@
     ]
   },
   "dependencies": {
-    "@php-wasm/node": "0.9.31",
-    "@php-wasm/universal": "0.9.31",
+		"@php-wasm/node": "0.9.42",
+		"@php-wasm/progress": "0.9.42",
+		"@php-wasm/universal": "0.9.42",
+		"@php-wasm/util": "0.9.42",
+		"@php-wasm/web": "0.9.42",
     "@webcontainer/env": "^1.1.1",
-    "@wp-playground/blueprints": "0.9.31",
+    "@wp-playground/blueprints": "0.9.42",
     "compressible": "^2.0.18",
     "compression": "^1.7.4",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-fileupload": "^1.5.1",
-    "follow-redirects": "^1.15.6",
+    "follow-redirects": "^1.15.9",
     "fs-extra": "^11.2.0",
     "hpagent": "^1.2.0",
     "unzipper": "^0.12.3",
@@ -60,12 +63,12 @@
   "devDependencies": {
     "@gjsify/esbuild-plugin-transform-ext": "^0.0.4",
     "@types/fs-extra": "^11.0.4",
-    "@yao-pkg/pkg": "^5.12.1",
+    "@yao-pkg/pkg": "^5.14.2",
     "esbuild": "^0.23.1",
     "globby": "^14.0.2",
     "prettier": "^3.3.3",
     "testra": "^2.1.4",
-    "tsx": "^4.17.0"
+    "tsx": "^4.19.1"
   },
   "license": "GPL-2.0-or-later"
 }

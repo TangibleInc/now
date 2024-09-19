@@ -14,7 +14,7 @@ test('wp-now', async () => {
   const testsFolder = process.cwd() // path.join(process.cwd(), 'tests')
   await startServer(await getWpNowConfig({
     path: testsFolder,
-    silence: true
+    // silence: true
   }))
 
   ok(true, 'starts')

@@ -1,8 +1,9 @@
-import startWPNow from './wp-now.ts'
-import { WPNowOptions } from './config.ts'
-import { disableOutput } from './output.ts'
-import * as path from 'path'
-import fs from 'fs-extra'
+import { useHostFilesystem } from '@php-wasm/node';
+import startWPNow from './wp-now';
+import { WPNowOptions } from './config';
+import { disableOutput } from './output';
+import * as path from 'path';
+import fs from 'fs-extra';
 
 /**
  * Execute a PHP cli given its parameters.
@@ -14,35 +15,38 @@ import fs from 'fs-extra'
  * @throws - Throws an error if the first element in phpArgs is not the string 'php'.
  */
 export async function executePHP(
-  phpArgs: string[],
-  options: WPNowOptions = {},
+	phpArgs: string[],
+	options: WPNowOptions = {}
 ) {
-  if (phpArgs[0] !== 'php') {
-    throw new Error(
-      'The first argument to executePHP must be the string "php".',
-    )
-  }
-  disableOutput()
-  const { phpInstances, options: wpNowOptions } = await startWPNow({
-    ...options,
-    numberOfPhpInstances: 2,
-  })
-  const [, php] = phpInstances
+	if (phpArgs[0] !== 'php') {
+		throw new Error(
+			'The first argument to executePHP must be the string "php".'
+		);
+	}
+	disableOutput();
+	const { php, options: wpNowOptions } = await startWPNow({
+		...options,
+		// @TODO: Any other mode throws WASM error
+		// mode: WPNowMode.INDEX,
+	});
 
-  try {
-    php.useHostFilesystem()
-    if (!path.isAbsolute(phpArgs[1])) {
-      const maybePhpFile = path.join(wpNowOptions.projectPath, phpArgs[1])
-      if (fs.existsSync(maybePhpFile)) {
-        phpArgs[1] = maybePhpFile
-      }
-    }
-    await php.cli(phpArgs)
-  } catch (resultOrError) {
-    const success =
-      resultOrError.name === 'ExitStatus' && resultOrError.status === 0
-    if (!success) {
-      throw resultOrError
-    }
-  }
+	try {
+		useHostFilesystem(php);
+		if (!path.isAbsolute(phpArgs[1])) {
+			const maybePhpFile = path.join(
+				wpNowOptions.projectPath,
+				phpArgs[1]
+			);
+			if (fs.existsSync(maybePhpFile)) {
+				phpArgs[1] = maybePhpFile;
+			}
+		}
+		await php.cli(phpArgs);
+	} catch (resultOrError) {
+		const success =
+			resultOrError.name === 'ExitStatus' && resultOrError.status === 0;
+		if (!success) {
+			throw resultOrError;
+		}
+	}
 }
