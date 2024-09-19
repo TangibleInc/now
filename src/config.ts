@@ -109,9 +109,38 @@ function getWpContentHomePath(projectPath: string, mode: string) {
 export default async function getWpNowConfig(
 	args: CliOptions
 ): Promise<WPNowOptions> {
-	if (args.port) {
-		portFinder.setPort(args.port);
-	}
+
+  const projectPath = (args.path || DEFAULT_OPTIONS.projectPath) as string
+
+  // Options from wp-env config files
+  const wpEnv: Partial<WPEnvOptions> = {}
+  for (const file of ['.wp-env.json', '.wp-env.override.json']) {
+    try {
+      const config = await fs.readJson(path.join(projectPath, file))
+      Object.assign(wpEnv, config, {
+        mappings: {
+          ...wpEnv.mappings,
+          ...config.mappings,
+        },
+      })
+    } catch (e) {
+      continue
+    }
+  }
+
+  if (args.mappings) {
+    // Mappings given directly has priority
+    Object.assign(wpEnv, {
+      mappings: {
+        ...wpEnv.mappings,
+        ...args.mappings,
+      },
+    })
+  }
+
+  if (args.port || wpEnv.port) {
+    portFinder.setPort(args.port || wpEnv.port)
+  }
 	const port = await portFinder.getOpenPort();
 	const optionsFromCli: WPNowOptions = {
 		phpVersion: args.php as SupportedPHPVersion,
@@ -123,7 +152,7 @@ export default async function getWpNowConfig(
 
 	const options: WPNowOptions = {} as WPNowOptions;
 
-	[optionsFromCli, DEFAULT_OPTIONS].forEach((config) => {
+	[optionsFromCli, wpEnv, DEFAULT_OPTIONS].forEach((config) => {
 		for (const key in config) {
 			if (!options[key]) {
 				options[key] = config[key];

@@ -132,6 +132,20 @@ export default async function startWPNow(
 
 	await prepareWordPress(php, options);
 
+  if (options.mappings) {
+    for (const [key, value] of Object.entries(options.mappings)) {
+      const localPath: string = value.startsWith('/')
+        ? value
+        : path.join(options.projectPath || process.cwd(), value)
+      if (fs.existsSync(localPath)) {
+        output?.log(`Mapping: ${key} -> ${value}`)
+        await mountWithHandler(php, `${documentRoot}/${key}`, localPath)
+      } else {
+        output?.log(`Mapping: ${key} -> ${value} (Not found)`)
+      }
+    }
+  }
+
 	if (options.blueprintObject) {
 		output?.log(`blueprint steps: ${options.blueprintObject.steps.length}`);
 		const compiled = compileBlueprint(options.blueprintObject, {
