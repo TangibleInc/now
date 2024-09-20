@@ -1,5 +1,6 @@
 {
   "name": "@tangible/now",
+  "type": "module",
   "version": "1.0.8",
   "description": "Standalone command-line tool to manage local WordPress sites",
   "main": "build/cjs/index.js",
@@ -9,7 +10,7 @@
   },
   "scripts": {
     "start": "cd tests && tsx ../src/main.ts start --open",
-    "build": "npm run format && npm run test && mkdir -p build && npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
+    "build": "npm run test && mkdir -p build && npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
     "build:cjs": "bun build.ts cjs",
     "build:esm": "bun build.ts esm",
     "build:types": "tsc --project tsconfig.types.json",
@@ -43,13 +44,14 @@
     ]
   },
   "dependencies": {
-		"@php-wasm/node": "0.9.42",
-		"@php-wasm/progress": "0.9.42",
-		"@php-wasm/universal": "0.9.42",
-		"@php-wasm/util": "0.9.42",
-		"@php-wasm/web": "0.9.42",
+    "@php-wasm/node": "0.9.42",
+    "@php-wasm/progress": "0.9.42",
+    "@php-wasm/universal": "0.9.42",
+    "@php-wasm/util": "0.9.42",
+    "@php-wasm/web": "0.9.42",
     "@webcontainer/env": "^1.1.1",
     "@wp-playground/blueprints": "0.9.42",
+    "@wp-playground/wordpress": "^0.9.42",
     "compressible": "^2.0.18",
     "compression": "^1.7.4",
     "express": "^4.21.0",
