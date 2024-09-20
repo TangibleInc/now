@@ -95,9 +95,9 @@ export default async function startWPNow(
 
 	prepareDocumentRoot(php, options);
 
-	output?.log(`directory: ${options.projectPath}`);
-	output?.log(`mode: ${options.mode}`);
-	output?.log(`php: ${options.phpVersion}`);
+	output?.log(`Directory: ${options.projectPath}`);
+	output?.log(`Mode: ${options.mode}`);
+	output?.log(`PHP: ${options.phpVersion}`);
 	if (options.mode === WPNowMode.INDEX) {
 		runIndexMode(php, options);
 		return { php, options };
@@ -114,7 +114,7 @@ export default async function startWPNow(
 		wpVersionOutput += ` (resolved from alias: ${originalWordPressVersion})`;
 	}
 
-	output?.log(`wp: ${wpVersionOutput}`);
+	output?.log(`WP: ${wpVersionOutput}`);
 	await Promise.all([
 		downloadWordPress(options.wordPressVersion, { isDeveloperBuild }),
 		downloadMuPlugins(),
@@ -147,7 +147,7 @@ export default async function startWPNow(
   }
 
 	if (options.blueprintObject) {
-		output?.log(`blueprint steps: ${options.blueprintObject.steps.length}`);
+		output?.log(`Blueprint steps: ${options.blueprintObject.steps.length}`);
 		const compiled = compileBlueprint(options.blueprintObject, {
 			onStepCompleted: (result, step: StepDefinition) => {
 				output?.log(`Blueprint step completed: ${step.step}`);
