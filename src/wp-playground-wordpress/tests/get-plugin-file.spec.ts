@@ -1,5 +1,5 @@
 import path from 'path';
-import { getPluginFile } from '../get-plugin-file';
+import { getPluginFile } from '../get-plugin-file.ts';
 
 const modesPath = path.resolve(__dirname, '..', '..', 'tests', 'mode-examples');
 

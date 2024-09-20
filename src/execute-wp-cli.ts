@@ -1,8 +1,8 @@
-import { downloadWPCLI } from './download';
+import { downloadWPCLI } from './download.ts';
 import { rootCertificates } from 'tls';
-import getWpCliPath from './get-wp-cli-path';
-import getWpNowConfig from './config';
-import { DEFAULT_PHP_VERSION, DEFAULT_WORDPRESS_VERSION } from './constants';
+import getWpCliPath from './get-wp-cli-path.ts';
+import getWpNowConfig from './config.ts';
+import { DEFAULT_PHP_VERSION, DEFAULT_WORDPRESS_VERSION } from './constants.ts';
 import { phpVar } from '@php-wasm/util';
 import { createNodeFsMountHandler, loadNodeRuntime } from '@php-wasm/node';
 import {

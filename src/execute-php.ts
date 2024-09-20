@@ -1,7 +1,7 @@
 import { useHostFilesystem } from '@php-wasm/node';
-import startWPNow from './wp-now';
-import { WPNowOptions } from './config';
-import { disableOutput } from './output';
+import startWPNow from './wp-now.ts';
+import { WPNowOptions } from './config.ts';
+import { disableOutput } from './output.ts';
 import * as path from 'path';
 import fs from 'fs-extra';
 

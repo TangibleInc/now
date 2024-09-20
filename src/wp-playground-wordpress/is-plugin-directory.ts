@@ -1,4 +1,4 @@
-import { getPluginFile } from './get-plugin-file';
+import { getPluginFile } from './get-plugin-file.ts';
 
 /**
  * Checks if the given path is a WordPress plugin.

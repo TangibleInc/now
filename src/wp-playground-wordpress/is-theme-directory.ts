@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { readFileHead } from './read-file-head';
+import { readFileHead } from './read-file-head.ts';
 
 /**
  * Checks if the given path is a WordPress theme directory.

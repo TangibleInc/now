@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path, { basename } from 'path';
-import { readFileHead } from './read-file-head';
+import { readFileHead } from './read-file-head.ts';
 
 /**
  * Sorts the files in the given array using a heuristic.

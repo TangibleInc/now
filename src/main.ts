@@ -1,4 +1,4 @@
-import { runCli } from './run-cli';
+import { runCli } from './run-cli.ts';
 
 const requiredMajorVersion = 18;
 

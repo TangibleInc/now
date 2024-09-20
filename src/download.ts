@@ -5,12 +5,12 @@ import { IncomingMessage } from 'http';
 import os from 'os';
 import path from 'path';
 import unzipper from 'unzipper';
-import { SQLITE_FILENAME, SQLITE_URL, WP_CLI_URL } from './constants';
-import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path';
-import getWordpressVersionsPath from './get-wordpress-versions-path';
-import getWpCliPath from './get-wp-cli-path';
-import getWpNowPath from './get-wp-now-path';
-import { output } from './output';
+import { SQLITE_FILENAME, SQLITE_URL, WP_CLI_URL } from './constants.ts';
+import getSqlitePath, { getSqliteDbCopyPath } from './get-sqlite-path.ts';
+import getWordpressVersionsPath from './get-wordpress-versions-path.ts';
+import getWpCliPath from './get-wp-cli-path.ts';
+import getWpNowPath from './get-wp-now-path.ts';
+import { output } from './output.ts';
 
 function httpsGet(url: string, callback: Function) {
 	const proxy =

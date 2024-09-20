@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import getWpNowPath from '../get-wp-now-path';
+import getWpNowPath from '../get-wp-now-path.ts';
 
 const VERSION_CHECKER_ENDPOINT =
 	'https://api.wordpress.org/core/version-check/1.7';
