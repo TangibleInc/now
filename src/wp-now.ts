@@ -157,7 +157,11 @@ export default async function startWPNow(
 	}
 
 	await installationStep2(php);
-	try {
+
+  // Silence deprecation notice for PHP.request()
+  const _ = console.warn
+  console.warn = () => {}
+  try {
 		await login(php, {
 			username: 'admin',
 			password: 'password',
@@ -167,6 +171,7 @@ export default async function startWPNow(
 		// and the login fails now.
 		output?.error('Login failed');
 	}
+  console.warn = _
 
 	if (
 		isFirstTimeProject &&
