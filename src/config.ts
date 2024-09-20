@@ -21,6 +21,7 @@ export interface CliOptions {
 	port?: number;
 	blueprint?: string;
 	reset?: boolean;
+  mappings?: string[];
 }
 
 export const enum WPNowMode {
@@ -47,6 +48,9 @@ export interface WPNowOptions {
 	blueprintObject?: Blueprint;
 	reset?: boolean;
 	landingPage?: string;
+  mappings?: {
+    [src: string]: string;
+  }
 }
 
 export const DEFAULT_OPTIONS: WPNowOptions = {
@@ -68,7 +72,9 @@ export interface WPEnvOptions {
 	port: number;
 	testsPort: number;
 	config: Object;
-	mappings: Object;
+	mappings: {
+    [src: string]: string;
+  };
 }
 
 let absoluteUrlFromBlueprint = '';
@@ -133,7 +139,10 @@ export default async function getWpNowConfig(
     Object.assign(wpEnv, {
       mappings: {
         ...wpEnv.mappings,
-        ...args.mappings,
+        ...args.mappings.map(s => s.split(':')).reduce((obj, [src, dest]) => {
+          obj[src] = dest
+          return obj
+        }, {}),
       },
     })
   }
