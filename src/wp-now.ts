@@ -146,6 +146,8 @@ export default async function startWPNow(
     }
   }
 
+	await installationStep2(php);
+
 	if (options.blueprintObject) {
 		output?.log(`Blueprint steps: ${options.blueprintObject.steps.length}`);
 		const compiled = compileBlueprint(options.blueprintObject, {
@@ -155,8 +157,6 @@ export default async function startWPNow(
 		});
 		await runBlueprintSteps(compiled, php);
 	}
-
-	await installationStep2(php);
 
   // Silence deprecation notice for PHP.request()
   const _ = console.warn
