@@ -135,14 +135,17 @@ export default async function getWpNowConfig(
   }
 
   if (args.mappings) {
-    // Mappings given directly has priority
+    // Mappings given via CLI has priority
+    const mappings = Array.isArray(args.mappings)
+      ? args.mappings.map(s => s.split(':')).reduce((obj, [src, dest]) => {
+        obj[src] = dest
+        return obj
+      }, {})
+      : args.mappings
     Object.assign(wpEnv, {
       mappings: {
         ...wpEnv.mappings,
-        ...args.mappings.map(s => s.split(':')).reduce((obj, [src, dest]) => {
-          obj[src] = dest
-          return obj
-        }, {}),
+        ...mappings,
       },
     })
   }
