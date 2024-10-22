@@ -33,9 +33,7 @@ git checkout -b main
 ```sh
 git checkout upstream-trunk
 git pull
-
 git subtree split --prefix=packages/wp-now/src --onto wp-now -b wp-now
-
 git checkout main
-git rebase wp-now
+git merge wp-now
 ```
