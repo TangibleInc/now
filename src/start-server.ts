@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { WPNowOptions } from './config.ts';
-import { HTTPMethod, PHP } from '@php-wasm/universal';
+import type { HTTPMethod, PHP } from '@php-wasm/universal';
 import express from 'express';
 import compression from 'compression';
 import compressible from 'compressible';
@@ -43,7 +43,7 @@ export async function startServer(
 		);
 	}
 	const app = express();
-	app.use(compression({ filter: shouldCompress }));
+	app.use(compression({ filter: shouldCompress, threshold: 0 }));
 	app.use(addTrailingSlash('/wp-admin'));
 	const port = await portFinder.getOpenPort();
 	const { php, options: wpNowOptions } = await startWPNow(options);

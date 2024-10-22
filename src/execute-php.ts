@@ -1,6 +1,6 @@
 import { useHostFilesystem } from '@php-wasm/node';
 import startWPNow from './wp-now.ts';
-import { WPNowOptions } from './config.ts';
+import { WPNowMode, WPNowOptions } from './config.ts';
 import { disableOutput } from './output.ts';
 import * as path from 'path';
 import fs from 'fs-extra';
@@ -26,8 +26,7 @@ export async function executePHP(
 	disableOutput();
 	const { php, options: wpNowOptions } = await startWPNow({
 		...options,
-		// @TODO: Any other mode throws WASM error
-		// mode: WPNowMode.INDEX,
+		mode: WPNowMode.INDEX,
 	});
 
 	try {
