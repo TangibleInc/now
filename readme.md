@@ -27,3 +27,15 @@ git subtree split --prefix=packages/wp-now/src -b wp-now
 git checkout wp-now
 git checkout -b main
 ```
+
+### Sync from upstream
+
+```sh
+git checkout upstream-trunk
+git pull
+
+git subtree split --prefix=packages/wp-now/src --onto wp-now -b wp-now
+
+git checkout main
+git rebase wp-now
+```
