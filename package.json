@@ -44,20 +44,19 @@
     ]
   },
   "dependencies": {
-    "@php-wasm/node": "1.0.4",
-    "@php-wasm/progress": "1.0.4",
-    "@php-wasm/universal": "1.0.4",
-    "@php-wasm/util": "1.0.4",
-    "@php-wasm/web": "1.0.4",
+    "@php-wasm/node": "1.0.21",
+    "@php-wasm/progress": "1.0.21",
+    "@php-wasm/universal": "1.0.21",
+    "@php-wasm/util": "1.0.21",
     "@webcontainer/env": "^1.1.1",
-    "@wp-playground/blueprints": "1.0.4",
-    "@wp-playground/wordpress": "^1.0.4",
+    "@wp-playground/blueprints": "1.0.21",
+    "@wp-playground/wordpress": "^1.0.21",
     "compressible": "^2.0.18",
-    "compression": "^1.7.4",
-    "express": "^4.21.1",
+    "compression": "^1.7.5",
+    "express": "^4.21.2",
     "express-fileupload": "^1.5.1",
     "follow-redirects": "^1.15.9",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "hpagent": "^1.2.0",
     "unzipper": "^0.12.3",
     "yargs": "^17.7.2"
@@ -65,12 +64,12 @@
   "devDependencies": {
     "@gjsify/esbuild-plugin-transform-ext": "^0.0.4",
     "@types/fs-extra": "^11.0.4",
-    "@yao-pkg/pkg": "^5.16.1",
-    "esbuild": "^0.24.0",
+    "@yao-pkg/pkg": "^6.2.0",
+    "esbuild": "^0.24.2",
     "globby": "^14.0.2",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.2",
     "testra": "^2.1.4",
-    "tsx": "^4.19.1"
+    "tsx": "^4.19.2"
   },
   "license": "GPL-2.0-or-later"
 }

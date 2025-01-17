@@ -1,5 +1,6 @@
 /build
 /bun.lockb
+/package-lock.json
 .idea
 node_modules
 /releases
