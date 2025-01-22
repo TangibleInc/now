@@ -1,24 +1,26 @@
 {
   "name": "@tangible/now",
   "type": "module",
-  "version": "1.1.3",
-  "description": "Standalone command-line tool to manage local WordPress sites",
+  "version": "2.0.0",
+  "description": "Standalone command-line tool to run local WordPress site on Playground",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
   "bin": {
     "wp-now": "run"
   },
   "scripts": {
-    "start": "cd tests && tsx ../src/main.ts start --open",
-    "build": "npm run test && mkdir -p build && npm run clean && npm run build:esm && npm run build:cjs # && npm run build:types",
-    "build:cjs": "bun build.ts cjs",
+    "start": "cd tests && ../run start",
+    "build": "npm run test && mkdir -p build && npm run clean && npm run build:esm # && npm run build:types",
     "build:esm": "bun build.ts esm",
     "build:types": "tsc --project tsconfig.types.json",
-    "build:bin": "pkg --compress Brotli --out-path releases --config package.json build/cjs/main.js && bun build.ts bin",
-    "clean": "rm -rf build/cjs/* && rm -rf build/esm/* && rm -rf build/web/* && rm -rf build/types/* && rm -f build/tsconfig.types.tsbuildinfo",
+    "build:ext": "bun build.ts ext",
+    "clean": "rm -rf build/esm/* && rm -rf build/types/* && rm -f build/tsconfig.types.tsbuildinfo",
     "format": "prettier --no-config --log-level warn --no-semi --single-quote --write --tab-width 2 --use-tabs false src",
-    "test": "cd tests && tsx index.ts",
-    "release": "npm run build && npm publish --access public"
+    "test": "cd tests && bun index.ts",
+    "test:8.4": "cd tests && PHP_VERSION=8.4 bun index.ts",
+    "test:all": "npm run test && npm run test:8.4",
+    "release": "npm publish --access public",
+    "release:try": "npm publish --dry-run"
   },
   "exports": {
     ".": {
@@ -35,41 +37,55 @@
   "files": [
     "build",
     "license.txt",
+    "package.json",
     "readme.md"
   ],
-  "pkg": {
-    "assets": [
-      "node_modules/@php-wasm/node/8_0_30/**",
-      "node_modules/@php-wasm/node/php_8_0.js"
-    ]
-  },
   "dependencies": {
-    "@php-wasm/node": "1.0.21",
-    "@php-wasm/progress": "1.0.21",
-    "@php-wasm/universal": "1.0.21",
-    "@php-wasm/util": "1.0.21",
+    "@php-wasm/logger": "1.0.22",
+    "@php-wasm/node-polyfills": "1.0.22",
+    "@php-wasm/node": "1.0.22",
+    "@php-wasm/progress": "1.0.22",
+    "@php-wasm/universal": "1.0.22",
+    "@php-wasm/util": "1.0.22",
+    "@php-wasm/web-service-worker": "^1.0.22",
     "@webcontainer/env": "^1.1.1",
-    "@wp-playground/blueprints": "1.0.21",
-    "@wp-playground/wordpress": "^1.0.21",
+    "@wp-playground/blueprints": "1.0.22",
+    "@wp-playground/cli": "1.0.22",
+    "@wp-playground/common": "1.0.22",
+    "@wp-playground/storage": "1.0.22",
+    "@wp-playground/wordpress": "1.0.22",
+    "ajv": "8.17.1",
+    "async-lock": "1.4.1",
+    "buffer": "6.0.3",
+    "clean-git-ref": "2.0.1",
+    "comlink": "^4.4.2",
     "compressible": "^2.0.18",
     "compression": "^1.7.5",
-    "express": "^4.21.2",
+    "crc-32": "1.2.2",
+    "diff3": "0.0.4",
+    "events": "3.3.0",
     "express-fileupload": "^1.5.1",
+    "express": "4.21.2",
     "follow-redirects": "^1.15.9",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "11.3.0",
     "hpagent": "^1.2.0",
+    "ignore": "7.0.3",
+    "ini": "5.0.0",
+    "minimisted": "2.0.1",
+    "octokit": "4.1.0",
+    "pako": "2.1.0",
+    "pify": "6.1.0",
+    "readable-stream": "4.7.0",
+    "sha.js": "2.4.11",
+    "simple-get": "4.0.1",
     "unzipper": "^0.12.3",
-    "yargs": "^17.7.2"
+    "wasm-feature-detect": "1.8.0",
+    "ws": "8.18.0",
+    "yargs": "17.7.2"
   },
   "devDependencies": {
-    "@gjsify/esbuild-plugin-transform-ext": "^0.0.4",
-    "@types/fs-extra": "^11.0.4",
-    "@yao-pkg/pkg": "^6.2.0",
     "esbuild": "^0.24.2",
     "globby": "^14.0.2",
-    "prettier": "^3.4.2",
-    "testra": "^2.1.4",
-    "tsx": "^4.19.2"
-  },
-  "license": "GPL-2.0-or-later"
+    "testra": "^2.1.4"
+  }
 }

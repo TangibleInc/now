@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Using CommonJS for now, to support pkg for building binary
+
 ;(async () => {
-  await import('./build/esm/main.js')
+  await (await import('./build/esm/index.js')).runCli()
 })().catch(console.error)

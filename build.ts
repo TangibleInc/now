@@ -1,8 +1,16 @@
+import path from 'node:path'
+import fs from 'node:fs/promises'
 import esbuild from 'esbuild'
 import { globby } from 'globby'
-import fs from 'node:fs/promises'
 import { transformExtPlugin } from '@gjsify/esbuild-plugin-transform-ext'
+// import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions'
+// import {
+//   fixImportsPlugin,
+//   fixFolderImportsPlugin,
+//   fixExtensionsPlugin,
+// } from 'esbuild-fix-imports-plugin'
 import { version } from './package.json'
+import type { BuildOptions } from 'esbuild'
 
 const args = process.argv.slice(2)
 let command = args.shift() || 'build'
@@ -23,47 +31,21 @@ async function fileExists(file: string): Promise<boolean> {
   // const { name } = JSON.parse(await fs.readFile('./package.json'))
   const name = 'now'
 
-  /**
-   * Prepare built binaries
-   */
-  if (command === 'bin') {
-    if (!(await fileExists('releases/@tangible'))) {
-      console.log('Build binaries first: npm run build:bin')
-      return
-    }
-    for (const file of await globby('releases/@tangible/*')) {
-      const target = `releases/${file.split('/').pop()}`
-      console.log(target)
-      await fs.rename(file, target)
-    }
-    await fs.rmdir('releases/@tangible')
-    return
-  }
-
-  /**
+    /**
    * Add file extensions to satisfy ESM requirement
    */
-  if (command === 'ext') {
-    for (const file of await globby('src/**/*.ts')) {
-      const content = (await fs.readFile(file, 'utf8'))
-        .replace(/from '\.(.+)'/g, "from '.$1.ts'")
-      console.log(file)
-      await fs.writeFile(file, content)
+    if (command === 'ext') {
+      for (const file of await globby('blueprints/**/*.ts')) {
+        const content = (await fs.readFile(file, 'utf8'))
+          .replace(/from '\.(.+)'/g, "from '.$1.ts'")
+        console.log(file)
+        await fs.writeFile(file, content)
+      }
+  
+      return
     }
-
-    return
-  }
-
-  const entryFile = 'src/index.ts'
-  await fs.writeFile(
-    entryFile,
-    (await fs.readFile(entryFile, 'utf8')).replace(
-      /const version = '[0-9]+\.[0-9]+\.[0-9]+'/,
-      `const version = '${version}'`
-    )
-  )
-
-  const esbuildOptions = {
+  
+  const esbuildOptions: BuildOptions = {
     // entryPoints: [
     //   `./src/web.ts`,
     //   './src/web.test.ts'
@@ -79,16 +61,33 @@ async function fileExists(file: string): Promise<boolean> {
     // sourcemap: true,
     logLevel: 'info',
     jsx: 'automatic',
+    tsconfig: path.join(process.cwd(), './tsconfig.json'),
     plugins: [
       // Built ES module format expects import from .js
-      transformExtPlugin({ outExtension: { '.ts': '.js' } })
+      transformExtPlugin({ outExtension: { '.ts': '.js' } }),
+      // fixImportsPlugin(),
+      // esbuildPluginFilePathExtensions({ esmExtension: 'js' }),
     ],
   }
 
   async function getEntryPoints() {
-    return await globby(['./src/**/*.ts'], {
-      ignore: ['src/**/*.spec.ts'],
-    })
+    return await globby(
+      [
+        'index.ts',
+        'blueprints/**/*.ts',
+        'cli/**/*.ts',
+        'common/**/*.ts',
+        'isomorphic-git/**/*.js',
+        'now/**/*.ts',
+        // 'php-wasm-node'
+        'public/**/*.ts',
+        'storage/**/*.ts',
+        'wordpress/**/*.ts',
+      ],
+      {
+        ignore: ['**/*.spec.ts', '**/*.d.ts'],
+      }
+    )
   }
 
   if (command === 'cjs') {
@@ -104,12 +103,11 @@ async function fileExists(file: string): Promise<boolean> {
       minify: false,
       sourcemap: false,
     })
-
   } else if (command === 'esm') {
     delete esbuildOptions.outfile
 
     Object.assign(esbuildOptions, {
-      entryPoints: ['./src/**/*.ts'],
+      entryPoints: await getEntryPoints(), // ['./src/**/*.ts'],
       outdir: './build/esm',
       format: 'esm',
       platform: 'node',
@@ -117,7 +115,6 @@ async function fileExists(file: string): Promise<boolean> {
       minify: false,
       sourcemap: false,
     })
-
   } else {
     // docs
   }
@@ -127,11 +124,20 @@ async function fileExists(file: string): Promise<boolean> {
   await context.rebuild()
 
   if (command === 'cjs') {
-    await fs.mkdir('build/cjs', { recursive: true })
-    await fs.writeFile(`build/cjs/package.json`, `{"type": "commonjs"}`)
+    // await fs.mkdir('build/cjs', { recursive: true })
+    // await fs.writeFile(`build/cjs/package.json`, `{"type": "commonjs"}`)
   } else if (command === 'esm') {
     await fs.mkdir('build/esm', { recursive: true })
     await fs.writeFile(`build/esm/package.json`, `{"type": "module"}`)
+
+    for (const dir of [
+      // 'isomorphic-git',
+      // 'php-wasm-node'
+    ]) {
+      await fs.cp(dir, `build/esm/${dir}`, {
+        recursive: true,
+      })
+    }
   } else if (command === 'web') {
   }
 

@@ -3,6 +3,14 @@
   "compilerOptions": {
     "outDir": "./build/types",
     "declaration": true,
-    "emitDeclarationOnly": true
-  }
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+  },
+  "exclude": [
+    "**/*.spec.ts",
+    "blueprints",
+    "public",
+    "storage",
+    "wordpress"
+  ]
 }

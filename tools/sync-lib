@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+function main() {
+
+# TODO: Sync libs from node_modules
+
+
+}
+
+main

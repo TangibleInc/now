@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+function main() {
+
+local src=php-wasm-node
+
+if [ ! -d "$src" ]; then
+  rsync -vrlptz --delete node_modules/@php-wasm/node/ "$src"
+fi
+
+mkdir -p "$src"/asyncify-
+mkdir -p "$src"/jspi-
+
+cp -r "$src"/asyncify/7_4* "$src"/asyncify-
+cp -r "$src"/asyncify/php_7_4.js "$src"/asyncify-
+cp -r "$src"/asyncify/8_4* "$src"/asyncify-
+cp -r "$src"/asyncify/php_8_4.js "$src"/asyncify-
+
+cp -r "$src"/jspi/7_4* "$src"/jspi-
+cp -r "$src"/jspi/php_7_4.js "$src"/jspi-
+cp -r "$src"/jspi/8_4* "$src"/jspi-
+cp -r "$src"/jspi/php_8_4.js "$src"/jspi-
+
+rm -rf "$src"/asyncify
+mv "$src"/asyncify- "$src"/asyncify
+rm -rf "$src"/jspi
+mv "$src"/jspi- "$src"/jspi
+
+}
+
+main
