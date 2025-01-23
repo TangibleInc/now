@@ -1,7 +1,7 @@
 {
   "name": "@tangible/now",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Standalone command-line tool to run local WordPress site on Playground",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -59,8 +59,10 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@gjsify/esbuild-plugin-transform-ext": "^0.0.4",
     "esbuild": "^0.24.2",
     "globby": "^14.0.2",
-    "testra": "^2.1.4"
+    "testra": "^2.1.4",
+    "typescript": "^5.7.3"
   }
 }
