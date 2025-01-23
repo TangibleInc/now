@@ -4,7 +4,9 @@
   "version": "2.0.1",
   "description": "Standalone command-line tool to run local WordPress site on Playground",
   "homepage": "https://github.com/tangibleinc/now",
-  "repository": "git@github.com:tangibleinc/now.git",
+  "repository": {
+    "url": "git+ssh://git@github.com/tangibleinc/now.git"
+  },
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
   "bin": {
