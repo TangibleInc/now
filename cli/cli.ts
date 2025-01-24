@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-// import yargs from 'yargs';
+import yargs from 'yargs';
 import { startServer } from './server';
 import {
 	PHP,

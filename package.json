@@ -1,7 +1,7 @@
 {
   "name": "@tangible/now",
   "type": "module",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Standalone command-line tool to run local WordPress site on Playground",
   "homepage": "https://github.com/tangibleinc/now",
   "repository": {
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "cd tests && ../run start",
-    "build": "npm run test && mkdir -p build && npm run clean && npm run build:esm # && npm run build:types",
+    "build": "npm run test && mkdir -p build && npm run clean && npm run build:esm && npm run build:types",
     "build:esm": "bun build.ts esm",
     "build:types": "tsc --project tsconfig.types.json",
     "build:ext": "bun build.ts ext",
@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@gjsify/esbuild-plugin-transform-ext": "^0.0.4",
+    "@types/fs-extra": "^11.0.4",
     "esbuild": "^0.24.2",
     "globby": "^14.0.2",
     "testra": "^2.1.4",

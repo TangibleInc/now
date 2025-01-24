@@ -5,7 +5,7 @@ import {
 import crypto from 'crypto';
 import fs from 'fs-extra';
 import path from 'path';
-import { Blueprint } from '../blueprints'//'@wp-playground/blueprints';
+import { Blueprint } from '@wp-playground/blueprints';
 import { getCodeSpaceURL, isGitHubCodespace } from './github-codespaces.ts';
 import { inferMode } from './wp-now.ts';
 import { portFinder } from './port-finder.ts';
@@ -101,7 +101,7 @@ async function getAbsoluteURL() {
 
 function getWpContentHomePath(projectPath: string, mode: string) {
 	const basename = path.basename(projectPath);
-	const directoryHash = crypto
+  const directoryHash = crypto
 		.createHash('sha1')
 		.update(projectPath)
 		.digest('hex');
@@ -112,9 +112,35 @@ function getWpContentHomePath(projectPath: string, mode: string) {
 	return path.join(getWpNowPath(), 'wp-content', projectDirectory);
 }
 
+async function extendConfig({ config, projectPath, file }) {
+  const filePath = path.join(projectPath, file)
+  const dir = path.dirname(filePath)
+  const envConfig = await fs.readJson(filePath)
+
+  if (envConfig.extends) {
+    await extendConfig({
+      config,
+      projectPath,
+      file: path.relative(projectPath, path.join(dir, envConfig.extends)),
+    })
+  }
+
+  Object.assign(config, envConfig, {
+    mappings: {
+      ...config.mappings,
+      // Convert mapping target to be relative to the env file's folder
+      ...Object.keys(envConfig.mappings).reduce((o, k) => {
+        o[k] = path.join(path.relative(projectPath, dir), envConfig.mappings[k])
+        return o
+      }, {}),
+    },
+  })
+
+}
+
 export default async function getWpNowConfig(
 	args: CliOptions & {
-    mappings: CliOptions["mappings"] | WPNowOptions["mappings"]
+    mappings?: CliOptions["mappings"] | WPNowOptions["mappings"]
   }
 ): Promise<WPNowOptions> {
 
@@ -122,14 +148,19 @@ export default async function getWpNowConfig(
 
   // Options from wp-env config files
   const wpEnv: Partial<WPEnvOptions> = {}
-  for (const file of ['.wp-env.json', '.wp-env.override.json']) {
+
+  const checkEnvFiles = args.env
+  ? Array.isArray(args.env)
+    ? args.env
+    : [args.env]
+  : ['.wp-env.json', '.wp-env.override.json']
+
+  for (const file of checkEnvFiles) {
     try {
-      const config = await fs.readJson(path.join(projectPath, file))
-      Object.assign(wpEnv, config, {
-        mappings: {
-          ...wpEnv.mappings,
-          ...config.mappings,
-        },
+      await extendConfig({
+        config: wpEnv,
+        projectPath,
+        file,
       })
     } catch (e) {
       continue
@@ -178,8 +209,8 @@ export default async function getWpNowConfig(
 		options.mode = inferMode(options.projectPath);
 	}
 	if (!options.wpContentPath) {
-		options.wpContentPath = getWpContentHomePath(
-			options.projectPath,
+    options.wpContentPath = getWpContentHomePath(
+      options.projectPath,
 			options.mode
 		);
 	}
