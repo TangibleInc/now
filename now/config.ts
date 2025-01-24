@@ -113,7 +113,9 @@ function getWpContentHomePath(projectPath: string, mode: string) {
 }
 
 export default async function getWpNowConfig(
-	args: CliOptions
+	args: CliOptions & {
+    mappings: CliOptions["mappings"] | WPNowOptions["mappings"]
+  }
 ): Promise<WPNowOptions> {
 
   const projectPath = (args.path || DEFAULT_OPTIONS.projectPath) as string
@@ -140,7 +142,7 @@ export default async function getWpNowConfig(
       ? args.mappings.map(s => s.split(':')).reduce((obj, [src, dest]) => {
         obj[src] = dest
         return obj
-      }, {})
+      }, {} as WPNowOptions["mappings"])
       : args.mappings
     Object.assign(wpEnv, {
       mappings: {
