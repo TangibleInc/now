@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mkdir -p lib
+curl -L https://getcomposer.org/download/latest-stable/composer.phar -o lib/composer.phar

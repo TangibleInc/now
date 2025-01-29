@@ -1,3 +1,4 @@
+import fs from 'fs-extra'
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { startServer } from './start-server.ts';
@@ -8,6 +9,11 @@ import { spawn, SpawnOptionsWithoutStdio } from 'child_process';
 import { executePHP } from './execute-php.ts';
 import { output } from './output.ts';
 import { isGitHubCodespace } from './github-codespaces.ts';
+
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+    
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function startSpinner(message: string) {
 	process.stdout.write(`${message}...\n`);
@@ -153,6 +159,63 @@ export async function runCli() {
 					// 0: php, ...args
 					await executePHP(phpArgs, options);
 					process.exit(0);
+				} catch (error) {
+					console.error(error);
+					process.exit(error.status || -1);
+				}
+			}
+		).command(
+			'composer [..args]',
+			'Run the composer command passing the arguments',
+			(yargs) => {
+				// commonParameters(yargs);
+				yargs.strict(false);
+			},
+			async (argv) => {
+				try {
+					// 0: node, 1: wp-now, 2: php, ...args
+					const args = process.argv.slice(2);
+					const options = await getWpNowConfig({
+						path: argv.path as string,
+						php: argv.php as SupportedPHPVersion,
+					});
+					const phpArgs = args.includes('--')
+						? (argv._ as string[])
+						: args;
+					// 0: php, ...args
+
+
+          // Find lib folder
+
+          // From build/esm/now
+          let libPath = path.join(__dirname, '..', '..', '..', 'lib')
+          if (!await fs.exists(libPath)) {
+            // During development
+            libPath = path.join(__dirname, '..', 'lib')
+            if (!await fs.exists(libPath)) {
+              console.log('Bundled folder "lib" not found')
+              return
+            }
+          }
+          const composerPath = path.join(libPath, 'composer.phar')
+          if (!await fs.exists(composerPath)) {
+            console.log('composer.phar not found')
+            return
+          }
+        try {
+          await executePHP(
+            [
+              'php',
+              '-f',
+              composerPath,
+              ...phpArgs.slice(1)
+            ]
+          , options);          
+        } catch(e) {
+          console.log(e.message)
+        }
+
+          process.exit(0);
 				} catch (error) {
 					console.error(error);
 					process.exit(error.status || -1);
