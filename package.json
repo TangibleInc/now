@@ -23,6 +23,8 @@
     "test": "cd tests && bun index.ts",
     "test:8.4": "cd tests && PHP_VERSION=8.4 bun index.ts",
     "test:all": "npm run test && npm run test:8.4",
+    "test:composer": "cd tests && ../run composer install",
+    "test:phpunit": "cd tests && ../run phpunit",
     "release": "npm publish --access public",
     "release:try": "npm publish --dry-run"
   },

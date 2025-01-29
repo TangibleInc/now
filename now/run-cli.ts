@@ -185,36 +185,77 @@ export async function runCli() {
 					// 0: php, ...args
 
 
-          // Find lib folder
-
-          // From build/esm/now
-          let libPath = path.join(__dirname, '..', '..', '..', 'lib')
-          if (!await fs.exists(libPath)) {
-            // During development
-            libPath = path.join(__dirname, '..', 'lib')
-            if (!await fs.exists(libPath)) {
-              console.log('Bundled folder "lib" not found')
-              return
-            }
+          const libPath = await getLibPath()
+          if (!libPath) {
+            console.log('lib folder not found')
+            return
           }
           const composerPath = path.join(libPath, 'composer.phar')
           if (!await fs.exists(composerPath)) {
             console.log('composer.phar not found')
             return
           }
-        try {
-          await executePHP(
-            [
-              'php',
-              '-f',
-              composerPath,
-              ...phpArgs.slice(1)
-            ]
-          , options);          
-        } catch(e) {
-          console.log(e.message)
-        }
+          try {
+            await executePHP(
+              [
+                'php',
+                '-f',
+                composerPath,
+                ...phpArgs.slice(1)
+              ]
+            , options);          
+          } catch(e) {
+            console.log(e.message)
+          }
+          process.exit(0);
+				} catch (error) {
+					console.error(error);
+					process.exit(error.status || -1);
+				}
+			}
+		)
+    .command(
+			'phpunit [..args]',
+			'Run the phpunit command passing the arguments',
+			(yargs) => {
+				// commonParameters(yargs);
+				yargs.strict(false);
+			},
+			async (argv) => {
+				try {
+					// 0: node, 1: wp-now, 2: php, ...args
+					const args = process.argv.slice(2);
+					const options = await getWpNowConfig({
+						path: argv.path as string,
+						php: argv.php as SupportedPHPVersion,
+					});
+					const phpArgs = args.includes('--')
+						? (argv._ as string[])
+						: args;
+					// 0: php, ...args
 
+          const libPath = await getLibPath()
+          if (!libPath) {
+            console.log('lib folder not found')
+            return
+          }
+          const phpunitPath = path.join(libPath, 'phpunit.phar')
+          if (!await fs.exists(phpunitPath)) {
+            console.log('phpunit.phar not found')
+            return
+          }
+          try {
+            await executePHP(
+              [
+                'php',
+                '-f',
+                phpunitPath,
+                ...phpArgs.slice(1)
+              ]
+            , options);
+          } catch(e) {
+            console.log(e.message)
+          }
           process.exit(0);
 				} catch (error) {
 					console.error(error);
@@ -226,6 +267,21 @@ export async function runCli() {
 		.help()
 		.alias('h', 'help')
 		.strict().argv;
+}
+
+// Find lib folder
+async function getLibPath() {
+  // From build/esm/now
+  let libPath = path.join(__dirname, '..', '..', '..', 'lib')
+  if (!await fs.exists(libPath)) {
+    // During development
+    libPath = path.join(__dirname, '..', 'lib')
+    if (!await fs.exists(libPath)) {
+      // console.log('Bundled folder "lib" not found')
+      return false
+    }
+  }
+  return libPath
 }
 
 function openInDefaultBrowser(url: string) {

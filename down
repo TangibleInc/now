@@ -2,3 +2,8 @@
 
 mkdir -p lib
 curl -L https://getcomposer.org/download/latest-stable/composer.phar -o lib/composer.phar
+curl -L https://phar.phpunit.de/phpunit-9.6.phar -o lib/phpunit.phar
+
+# Polyfills can be loaded on user side
+#curl -L https://github.com/Yoast/PHPUnit-Polyfills/archive/refs/tags/3.1.1.zip -o lib/php-unit-polyfills.zip
+#cd lib && unzip php-unit-polyfills.zip && rm php-unit-polyfills.zip

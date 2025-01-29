@@ -1,4 +1,6 @@
 /build
+/tests/vendor
+/tests/composer.lock
 
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
