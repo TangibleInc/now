@@ -131,8 +131,13 @@ async function fileExists(file: string): Promise<boolean> {
     await fs.writeFile(`build/esm/package.json`, `{"type": "module"}`)
 
     for (const dir of [
-      // 'isomorphic-git',
-      // 'php-wasm-node'
+      'php-cli',
+      'php-wasm',
+      'php-wasm-fs-journal',
+      'php-wasm-web-utils',
+      'wp-playground-blueprints',
+      'wp-playground-storage',
+      'wp-playground-wordpress',
     ]) {
       await fs.cp(dir, `build/esm/${dir}`, {
         recursive: true,

@@ -4,15 +4,17 @@ import getWpCliPath from './get-wp-cli-path.ts';
 import getWpNowConfig from './config.ts';
 import { DEFAULT_PHP_VERSION, DEFAULT_WORDPRESS_VERSION } from './constants.ts';
 import { phpVar } from '@php-wasm/util';
-import { createNodeFsMountHandler, loadNodeRuntime }
-  // from '../php-wasm-node'
-  from '@php-wasm/node'
 import {
-	PHP,
+  // @php-wasm/node
+  createNodeFsMountHandler,
+  loadNodeRuntime,
+  // @php-wasm/universal
+  PHP,
+	setPhpIniEntries,
 	MountHandler,
 	writeFiles,
-	setPhpIniEntries,
-} from '@php-wasm/universal';
+} from '../php-wasm/index.js'
+
 import { readFileSync } from 'fs';
 
 const isWindows = process.platform === 'win32';

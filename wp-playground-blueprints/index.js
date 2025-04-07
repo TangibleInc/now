@@ -3,10 +3,16 @@ import { logger as fe } from "@php-wasm/logger";
 import { randomFilename as Wr, phpVars as nr, joinPaths as te, phpVar as le, dirname as gr, randomString as Rr, Semaphore as hr } from "@php-wasm/util";
 import { writeFiles as ar, LatestSupportedPHPVersion as Br, SupportedPHPVersions as zr } from "@php-wasm/universal";
 import { unzipFile as br } from "@wp-playground/common";
-import { resolveWordPressRelease as ir } from "@wp-playground/wordpress";
+
+// @wp-playground/wordpress
+import { resolveWordPressRelease as ir } from "../wp-playground-wordpress/index.js";
+
+// @wp-playground/storage
 import { cloneResponseMonitorProgress as Sr, ProgressTracker as Lr } from "@php-wasm/progress";
-import { resolveCommitHash as Cr, listGitFiles as Xr, listDescendantFiles as Zr, sparseCheckout as Mr } from "@wp-playground/storage";
-import { fetchWithCorsProxy as Ur } from "@php-wasm/web";
+import { resolveCommitHash as Cr, listGitFiles as Xr, listDescendantFiles as Zr, sparseCheckout as Mr } from "../wp-playground-storage/index.js";
+
+// @php-wasm/web
+import { fetchWithCorsProxy as Ur } from "../php-wasm-web-utils/fetch-with-cors-proxy.js";
 const wr = [
   "db.php",
   "plugins/akismet",

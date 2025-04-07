@@ -16,8 +16,8 @@ import {
 	compileBlueprint,
 	runBlueprintSteps,
 }
-  // from '../blueprints'
-  from '@wp-playground/blueprints'
+  from '../wp-playground-blueprints/index.js'
+  // from '@wp-playground/blueprints'
 import { isValidWordPressSlug } from './is-valid-wordpress-slug';
 import { EmscriptenDownloadMonitor, ProgressTracker } from '@php-wasm/progress';
 import { createNodeFsMountHandler, loadNodeRuntime }
@@ -25,8 +25,8 @@ import { createNodeFsMountHandler, loadNodeRuntime }
   from '@php-wasm/node'
 import { RecommendedPHPVersion, zipDirectory } from '@wp-playground/common';
 import { bootWordPress, resolveWordPressRelease }
-  // from '../wordpress'
-  from '@wp-playground/wordpress'
+  from '../wp-playground-wordpress/index.js'
+  // from '@wp-playground/wordpress'
 import { rootCertificates } from 'tls';
 import {
 	CACHE_FOLDER,

@@ -3,9 +3,13 @@ import fs from 'fs-extra';
 import startWPNow from './wp-now.ts';
 import { WPNowMode, WPNowOptions } from './config.ts';
 import { disableOutput } from './output.ts';
-import { useHostFilesystem }
-  // from '../php-wasm-node/index.js'
-  from '@php-wasm/node'
+
+// @php-wasm/node
+import {
+  useHostFilesystem
+} from '../php-wasm/index.js'
+
+import phpCli from '../php-cli/main.ts'
 
 /**
  * Execute a PHP cli given its parameters.
@@ -16,7 +20,10 @@ import { useHostFilesystem }
  * the exit name and status (0 for success).
  * @throws - Throws an error if the first element in phpArgs is not the string 'php'.
  */
-export async function executePHP(
+export { phpCli as executePHP }
+
+// Original - Replaced by fork of newer `@php-wasm/cli`
+export async function _executePHP(
 	phpArgs: string[],
 	options: WPNowOptions = {}
 ) {

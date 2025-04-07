@@ -12,8 +12,9 @@ test('wp-now', async () => {
     ...(await getWpNowConfig({
       path: testsFolder,
       // silence: true
+      reset: true,
     })),
-    phpVersion: process.env.PHP_VERSION || '8.2',
+    phpVersion: process.env.PHP_VERSION || '7.4', // '8.2',
   })
 
   ok(true, 'starts')
