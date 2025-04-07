@@ -12,7 +12,7 @@
  *
  * @return {WPEnvironmentConfig} The merged config object.
  */
-module.exports = function mergeConfigs( defaultConfig, ...configs ) {
+export default function mergeConfigs( defaultConfig, ...configs ) {
 	// Start with our default config object. This has all
 	// of the options filled out already and we can use
 	// that to make performing the merge easier.

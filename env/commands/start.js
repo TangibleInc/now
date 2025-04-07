@@ -2,37 +2,38 @@
 /**
  * External dependencies
  */
-const { v2: dockerCompose } = require( 'docker-compose' );
-const util = require( 'util' );
-const path = require( 'path' );
-const fs = require( 'fs' ).promises;
-const { confirm } = require( '@inquirer/prompts' );
-
-/**
- * Promisified dependencies
- */
-const sleep = util.promisify( setTimeout );
-const { rimraf } = require( 'rimraf' );
-const exec = util.promisify( require( 'child_process' ).exec );
+import dockerCompose from '../docker-compose.js' 
+import util from 'util' 
+import path from 'path' 
+import fs from 'fs/promises';
+import { confirm } from '@inquirer/prompts' 
+import { exec as execSync } from 'child_process' 
+import { rimraf } from 'rimraf' 
 
 /**
  * Internal dependencies
  */
-const retry = require( '../retry' );
-const stop = require( './stop' );
-const initConfig = require( '../init-config' );
-const downloadSources = require( '../download-sources' );
-const downloadWPPHPUnit = require( '../download-wp-phpunit' );
-const {
+import retry from '../retry.js' 
+import stop from './stop.js' 
+import initConfig from '../init-config.js' 
+import downloadSources from '../download-sources.js' 
+import downloadWPPHPUnit from '../download-wp-phpunit.js' 
+import {
 	checkDatabaseConnection,
 	configureWordPress,
 	setupWordPressDirectories,
 	readWordPressVersion,
 	canAccessWPORG,
-} = require( '../wordpress' );
-const { didCacheChange, setCache } = require( '../cache' );
-const md5 = require( '../md5' );
-const { executeLifecycleScript } = require( '../execute-lifecycle-script' );
+} from '../wordpress.js' 
+import { didCacheChange, setCache } from '../cache.js' 
+import md5 from '../md5.js' 
+import { executeLifecycleScript } from '../execute-lifecycle-script.js' 
+
+/**
+ * Promisified dependencies
+ */
+const sleep = util.promisify( setTimeout );
+const exec = util.promisify( execSync );
 
 /**
  * @typedef {import('../config').WPConfig} WPConfig
@@ -49,7 +50,7 @@ const CONFIG_CACHE_KEY = 'config_checksum';
  * @param {boolean} options.scripts Indicates whether or not lifecycle scripts should be executed.
  * @param {boolean} options.debug   True if debug mode is enabled.
  */
-module.exports = async function start( {
+export default async function start( {
 	spinner,
 	update,
 	xdebug,

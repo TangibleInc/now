@@ -2,8 +2,8 @@
 /**
  * External dependencies
  */
-const path = require( 'path' );
-const fs = require( 'fs' ).promises;
+import path from 'path' 
+import fs from 'fs/promises';
 
 /**
  * Options for cache parsing.
@@ -90,4 +90,4 @@ function getPathToCacheFile( workDirectoryPath ) {
 	return path.resolve( workDirectoryPath, CACHE_FILE_NAME );
 }
 
-module.exports = { didCacheChange, setCache, getCache, getCacheFile };
+export { didCacheChange, setCache, getCache, getCacheFile };

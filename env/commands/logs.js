@@ -2,12 +2,12 @@
 /**
  * External dependencies
  */
-const { v2: dockerCompose } = require( 'docker-compose' );
+import dockerCompose from '../docker-compose.js' 
 
 /**
  * Internal dependencies
  */
-const initConfig = require( '../init-config' );
+import initConfig from '../init-config.js' 
 
 /**
  * Displays the Docker & PHP logs on the given environment.
@@ -18,7 +18,7 @@ const initConfig = require( '../init-config' );
  * @param {Object}  options.spinner     A CLI spinner which indicates progress.
  * @param {boolean} options.debug       True if debug mode is enabled.
  */
-module.exports = async function logs( { environment, watch, spinner, debug } ) {
+export default async function logs( { environment, watch, spinner, debug } ) {
 	const config = await initConfig( { spinner, debug } );
 
 	// If we show text while watching the logs, it will continue showing up every

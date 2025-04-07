@@ -2,28 +2,28 @@
 /**
  * External dependencies
  */
-const path = require( 'path' );
+import path from 'path' 
 
 /**
  * Internal dependencies
  */
-const readRawConfigFile = require( './read-raw-config-file' );
-const {
+import readRawConfigFile from './read-raw-config-file.js' 
+import {
 	parseSourceString,
 	includeTestsPath,
-} = require( './parse-source-string' );
-const {
+} from './parse-source-string.js' 
+import {
 	ValidationError,
 	checkPort,
 	checkStringArray,
 	checkObjectWithValues,
 	checkVersion,
 	checkValidURL,
-} = require( './validate-config' );
-const getConfigFromEnvironmentVars = require( './get-config-from-environment-vars' );
-const detectDirectoryType = require( './detect-directory-type' );
-const { getLatestWordPressVersion } = require( '../wordpress' );
-const mergeConfigs = require( './merge-configs' );
+} from './validate-config.js' 
+import getConfigFromEnvironmentVars from './get-config-from-environment-vars.js' 
+import detectDirectoryType from './detect-directory-type.js' 
+import { getLatestWordPressVersion } from '../wordpress.js' 
+import mergeConfigs from './merge-configs.js' 
 
 /**
  * @typedef {import('./parse-source-string').WPSource} WPSource
@@ -582,7 +582,7 @@ async function parseCoreSource( coreSource, options ) {
 	return parseSourceString( coreSource, options );
 }
 
-module.exports = {
+export {
 	parseConfig,
 	getConfigFilePath,
 };

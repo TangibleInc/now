@@ -2,14 +2,14 @@
 /**
  * External dependencies
  */
-const os = require( 'os' );
+import os from 'os' 
 
 /**
  * Gets information about the host user.
  *
  * @return {Object} The host user's name, uid, and gid.
  */
-module.exports = function getHostUser() {
+export default function getHostUser() {
 	const hostUser = os.userInfo();
 
 	// On Windows the uid and gid will be -1. Since there isn't a great way to handle this,

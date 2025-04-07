@@ -19,7 +19,7 @@ const XDEBUG_MODES = [
  * @param {string|undefined} value The user-set mode of Xdebug; undefined if there is no --xdebug flag.
  * @return {string} The Xdebug mode to use with defaults applied.
  */
-module.exports = function parseXdebugMode( value ) {
+export default function parseXdebugMode( value ) {
 	if ( value === undefined ) {
 		return 'off';
 	}

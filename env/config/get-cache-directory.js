@@ -2,9 +2,9 @@
 /**
  * External dependencies
  */
-const path = require( 'path' );
-const fs = require( 'fs' ).promises;
-const os = require( 'os' );
+import path from 'path' 
+import fs from 'fs/promises';
+import os from 'os' 
 
 /**
  * Gets the directory in which generated files are created.
@@ -14,7 +14,7 @@ const os = require( 'os' );
  *
  * @return {Promise<string>} The absolute path to the `wp-env` home directory.
  */
-module.exports = async function getCacheDirectory() {
+export default async function getCacheDirectory() {
 	// Allow user to override download location.
 	if ( process.env.WP_ENV_HOME ) {
 		return path.resolve( process.env.WP_ENV_HOME );

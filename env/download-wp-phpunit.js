@@ -2,9 +2,9 @@
 /**
  * External dependencies
  */
-const SimpleGit = require( 'simple-git' );
-const fs = require( 'fs' );
-const path = require( 'path' );
+import SimpleGit from 'simple-git' 
+import fs from 'fs' 
+import path from 'path' 
 
 /**
  * @typedef {import('./config').WPConfig} WPConfig
@@ -19,7 +19,7 @@ const path = require( 'path' );
  * @param {boolean}  debug      Indicates whether or not debug mode is active.
  * @return {Promise} Returns a promise which resolves when the downloads finish.
  */
-module.exports = function downloadWPPHPUnit(
+export default function downloadWPPHPUnit(
 	config,
 	wpVersions,
 	spinner,

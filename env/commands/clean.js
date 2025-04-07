@@ -2,14 +2,14 @@
 /**
  * External dependencies
  */
-const { v2: dockerCompose } = require( 'docker-compose' );
+import dockerCompose from '../docker-compose.js' 
 
 /**
  * Internal dependencies
  */
-const initConfig = require( '../init-config' );
-const { configureWordPress, resetDatabase } = require( '../wordpress' );
-const { executeLifecycleScript } = require( '../execute-lifecycle-script' );
+import initConfig from '../init-config.js' 
+import { configureWordPress, resetDatabase } from '../wordpress.js' 
+import { executeLifecycleScript } from '../execute-lifecycle-script.js' 
 
 /**
  * @typedef {import('../wordpress').WPEnvironment} WPEnvironment
@@ -25,7 +25,7 @@ const { executeLifecycleScript } = require( '../execute-lifecycle-script' );
  * @param {boolean}                options.scripts     Indicates whether or not lifecycle scripts should be executed.
  * @param {boolean}                options.debug       True if debug mode is enabled.
  */
-module.exports = async function clean( {
+export default async function clean( {
 	environment,
 	spinner,
 	scripts,

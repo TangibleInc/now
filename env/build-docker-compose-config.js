@@ -2,15 +2,15 @@
 /**
  * External dependencies
  */
-const fs = require( 'fs' );
-const path = require( 'path' );
+import fs from 'fs' 
+import path from 'path' 
 
 /**
  * Internal dependencies
  */
-const { hasSameCoreSource } = require( './wordpress' );
-const { dbEnv } = require( './config' );
-const getHostUser = require( './get-host-user' );
+import { hasSameCoreSource } from './wordpress.js' 
+import { dbEnv } from './config/index.js' 
+import getHostUser from './get-host-user.js' 
 
 /**
  * @typedef {import('./config').WPConfig} WPConfig
@@ -87,7 +87,7 @@ function getMounts(
  *
  * @return {Object} A docker-compose config object, ready to serialize into YAML.
  */
-module.exports = function buildDockerComposeConfig( config ) {
+export default function buildDockerComposeConfig( config ) {
 	// Since we are mounting files from the host operating system
 	// we want to create the host user in some of our containers.
 	// This ensures ownership parity and lets us access files

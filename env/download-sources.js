@@ -2,18 +2,20 @@
 /**
  * External dependencies
  */
-const util = require( 'util' );
-const SimpleGit = require( 'simple-git' );
-const fs = require( 'fs' );
-const got = require( 'got' );
-const path = require( 'path' );
+import util from 'util' 
+import SimpleGit from 'simple-git' 
+import fs from 'fs' 
+import got from 'got' 
+import path from 'path' 
+import { rimraf } from 'rimraf' 
+import { pipeline as pipelineSync } from 'stream'
+import extractZipSync from 'extract-zip'
 
 /**
  * Promisified dependencies
  */
-const pipeline = util.promisify( require( 'stream' ).pipeline );
-const extractZip = util.promisify( require( 'extract-zip' ) );
-const { rimraf } = require( 'rimraf' );
+const pipeline = util.promisify( pipelineSync );
+const extractZip = util.promisify( extractZipSync );
 
 /**
  * @typedef {import('./config').WPConfig} WPConfig
@@ -28,7 +30,7 @@ const { rimraf } = require( 'rimraf' );
  * @param {Object}   spinner The spinner object to show progress.
  * @return {Promise} Returns a promise which resolves when the downloads finish.
  */
-module.exports = function downloadSources( config, spinner ) {
+export default function downloadSources( config, spinner ) {
 	const progresses = {};
 	const getProgressSetter = ( id ) => ( progress ) => {
 		progresses[ id ] = progress;

@@ -2,7 +2,7 @@
 /**
  * External dependencies
  */
-const { exec } = require( 'child_process' );
+import { exec } from 'child_process' 
 
 /**
  * @typedef {import('./config').WPConfig} WPConfig
@@ -80,7 +80,7 @@ function executeLifecycleScript( event, config, spinner ) {
 	} );
 }
 
-module.exports = {
+export {
 	LifecycleScriptError,
 	executeLifecycleScript,
 };

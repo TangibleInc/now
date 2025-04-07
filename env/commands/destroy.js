@@ -2,21 +2,21 @@
 /**
  * External dependencies
  */
-const { v2: dockerCompose } = require( 'docker-compose' );
-const fs = require( 'fs' ).promises;
-const path = require( 'path' );
-const { confirm } = require( '@inquirer/prompts' );
+import dockerCompose from '../docker-compose.js' 
+import fs from 'fs/promises';
+import path from 'path' 
+import { confirm } from '@inquirer/prompts' 
 
 /**
  * Promisified dependencies
  */
-const { rimraf } = require( 'rimraf' );
+import { rimraf } from 'rimraf' 
 
 /**
  * Internal dependencies
  */
-const { loadConfig } = require( '../config' );
-const { executeLifecycleScript } = require( '../execute-lifecycle-script' );
+import { loadConfig } from '../config/index.js' 
+import { executeLifecycleScript } from '../execute-lifecycle-script.js' 
 
 /**
  * Destroy the development server.
@@ -26,7 +26,7 @@ const { executeLifecycleScript } = require( '../execute-lifecycle-script' );
  * @param {boolean} options.scripts Indicates whether or not lifecycle scripts should be executed.
  * @param {boolean} options.debug   True if debug mode is enabled.
  */
-module.exports = async function destroy( { spinner, scripts, debug } ) {
+export default async function destroy( { spinner, scripts, debug } ) {
 	const config = await loadConfig( path.resolve( '.' ) );
 
 	try {

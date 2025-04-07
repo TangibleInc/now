@@ -2,16 +2,16 @@
 /**
  * External dependencies
  */
-const path = require( 'path' );
-const fs = require( 'fs' ).promises;
+import path from 'path' 
+import fs from 'fs/promises';
 
 /**
  * Internal dependencies
  */
-const getCacheDirectory = require( './get-cache-directory' );
-const md5 = require( '../md5' );
-const { parseConfig, getConfigFilePath } = require( './parse-config' );
-const postProcessConfig = require( './post-process-config' );
+import getCacheDirectory from './get-cache-directory.js' 
+import md5 from '../md5.js' 
+import { parseConfig, getConfigFilePath } from './parse-config.js' 
+import postProcessConfig from './post-process-config.js' 
 
 /**
  * @typedef {import('./parse-config').WPRootConfig} WPRootConfig
@@ -39,7 +39,7 @@ const postProcessConfig = require( './post-process-config' );
  *
  * @return {WPConfig} The config object we've loaded.
  */
-module.exports = async function loadConfig( configDirectoryPath ) {
+export default async function loadConfig( configDirectoryPath ) {
 	const configFilePath = getConfigFilePath( configDirectoryPath );
 
 	const cacheDirectoryPath = path.resolve(

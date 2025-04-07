@@ -2,15 +2,15 @@
 /**
  * Internal dependencies
  */
-const start = require( './start' );
-const stop = require( './stop' );
-const clean = require( './clean' );
-const run = require( './run' );
-const destroy = require( './destroy' );
-const logs = require( './logs' );
-const installPath = require( './install-path' );
+import start from './start.js' 
+import stop from './stop.js' 
+import clean from './clean.js' 
+import run from './run.js' 
+import destroy from './destroy.js' 
+import logs from './logs.js' 
+import installPath from './install-path.js' 
 
-module.exports = {
+export {
 	start,
 	stop,
 	clean,

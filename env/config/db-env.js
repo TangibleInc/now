@@ -17,7 +17,7 @@ const development = {
 	WORDPRESS_DB_NAME: 'wordpress',
 };
 
-module.exports = {
+export {
 	credentials,
 	tests,
 	development,

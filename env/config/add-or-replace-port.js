@@ -2,7 +2,7 @@
 /**
  * Internal dependencies
  */
-const { ValidationError } = require( './validate-config' );
+import { ValidationError } from './validate-config.js' 
 
 /**
  * Adds or replaces the port to the given domain or URI.
@@ -13,7 +13,7 @@ const { ValidationError } = require( './validate-config' );
  *
  * @return {string} The string with the port added or replaced.
  */
-module.exports = function addOrReplacePort( input, port, replace = true ) {
+export default function addOrReplacePort( input, port, replace = true ) {
 	// This matches both domains and URIs with an optional port and anything
 	// that remains after. We can use this to build an output string that
 	// adds or replaces the port without making any other changes to the input.

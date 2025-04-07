@@ -2,7 +2,7 @@
 /**
  * External dependencies
  */
-const crypto = require( 'crypto' );
+import crypto from 'crypto' 
 
 /**
  * Hashes the given string using the MD5 algorithm.
@@ -10,7 +10,7 @@ const crypto = require( 'crypto' );
  * @param {any} data The data to hash. If not a string, converted with JSON.stringify.
  * @return {string} An MD5 hash string.
  */
-module.exports = function md5( data ) {
+export default function md5( data ) {
 	const convertedData =
 		typeof data === 'string' ? data : JSON.stringify( data );
 

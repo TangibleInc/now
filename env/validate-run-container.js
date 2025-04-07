@@ -36,7 +36,7 @@ function validateRunContainer( value ) {
 	return value;
 }
 
-module.exports = {
+export {
 	RUN_CONTAINERS,
 	validateRunContainer,
 };

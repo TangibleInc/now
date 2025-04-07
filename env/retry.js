@@ -2,7 +2,7 @@
 /**
  * External dependencies
  */
-const util = require( 'util' );
+import util from 'util' 
 
 /**
  * Promisified dependencies
@@ -17,7 +17,7 @@ const sleep = util.promisify( setTimeout );
  * @param {number}   options.times        How many times to try before giving up.
  * @param {number}   [options.delay=5000] How long, in milliseconds, to wait between each try.
  */
-module.exports = async function retry( action, { times, delay = 5000 } ) {
+export default async function retry( action, { times, delay = 5000 } ) {
 	let tries = 0;
 	while ( true ) {
 		try {

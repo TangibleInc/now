@@ -2,29 +2,31 @@
 /**
  * External dependencies
  */
-const chalk = require( 'chalk' );
-const ora = require( 'ora' );
-const yargs = require( 'yargs' );
-const terminalLink = require( 'terminal-link' );
-const { execSync } = require( 'child_process' );
+import chalk from 'chalk' 
+import ora from 'ora' 
+import createYargs from 'yargs' 
+import { hideBin } from 'yargs/helpers'
+import terminalLink from 'terminal-link' 
+import { execSync } from 'child_process' 
 
 /**
  * Internal dependencies
  */
-const pkg = require( '../package.json' );
-const env = require( './env' );
-const parseXdebugMode = require( './parse-xdebug-mode' );
-const {
+// import pkg from '../package.json.js' 
+import * as env from './env.js' 
+import parseXdebugMode from './parse-xdebug-mode.js' 
+import {
 	RUN_CONTAINERS,
 	validateRunContainer,
-} = require( './validate-run-container' );
+} from './validate-run-container.js' 
 
 // Colors.
 const boldWhite = chalk.bold.white;
-const wpPrimary = boldWhite.bgHex( '#00669b' );
-const wpGreen = boldWhite.bgHex( '#4ab866' );
-const wpRed = boldWhite.bgHex( '#d94f4f' );
-const wpYellow = boldWhite.bgHex( '#f0b849' );
+const noop = a => a
+const wpPrimary = noop // boldWhite.bgHex( '#00669b' );
+const wpGreen = noop // boldWhite.bgHex( '#4ab866' );
+const wpRed = noop // boldWhite.bgHex( '#d94f4f' );
+const wpYellow = noop // boldWhite.bgHex( '#f0b849' );
 
 // Spinner.
 const withSpinner =
@@ -86,7 +88,7 @@ const withSpinner =
 		);
 	};
 
-module.exports = function cli() {
+export default function cli(args = process.argv) {
 	// Do nothing if Docker is unavailable.
 	try {
 		execSync( 'docker info', { stdio: 'ignore' } );
@@ -96,6 +98,8 @@ module.exports = function cli() {
 		);
 		process.exit( 1 );
 	}
+
+  const yargs = createYargs(hideBin(args))
 
 	yargs.usage( wpPrimary( '$0 <command>' ) );
 	yargs.option( 'debug', {
@@ -113,7 +117,7 @@ module.exports = function cli() {
 
 	// Since we might be running a different CLI version than the one that was called
 	// we need to set the version manually from the correct package.json.
-	yargs.version( pkg.version );
+	// yargs.version( pkg.version );
 
 	yargs.command(
 		'start',
@@ -253,6 +257,8 @@ module.exports = function cli() {
 		() => {},
 		withSpinner( env.installPath )
 	);
+
+  // yargs.parse(process.argv.slice(2))
 
 	return yargs;
 };

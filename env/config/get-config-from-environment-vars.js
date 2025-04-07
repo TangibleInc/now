@@ -2,11 +2,11 @@
 /**
  * Internal dependencies
  */
-const {
+import {
 	parseSourceString,
 	includeTestsPath,
-} = require( './parse-source-string' );
-const { checkPort, checkVersion, checkString } = require( './validate-config' );
+} from './parse-source-string.js' 
+import { checkPort, checkVersion, checkString } from './validate-config.js' 
 
 /**
  * @typedef {import('./parse-source-string').WPSource} WPSource
@@ -34,7 +34,7 @@ const { checkPort, checkVersion, checkString } = require( './validate-config' );
  *
  * @return {WPEnvironmentVariableConfig} Any configuration options parsed from the environment variables.
  */
-module.exports = function getConfigFromEnvironmentVars( cacheDirectoryPath ) {
+export default function getConfigFromEnvironmentVars( cacheDirectoryPath ) {
 	const environmentConfig = {
 		port: getPortFromEnvironmentVariable( 'WP_ENV_PORT' ),
 		mysqlPort: getPortFromEnvironmentVariable( 'WP_ENV_MYSQL_PORT' ),

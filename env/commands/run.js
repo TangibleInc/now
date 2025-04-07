@@ -2,14 +2,14 @@
 /**
  * External dependencies
  */
-const { spawn } = require( 'child_process' );
-const path = require( 'path' );
+import { spawn } from 'child_process' 
+import path from 'path' 
 
 /**
  * Internal dependencies
  */
-const initConfig = require( '../init-config' );
-const getHostUser = require( '../get-host-user' );
+import initConfig from '../init-config.js' 
+import getHostUser from '../get-host-user.js' 
 
 /**
  * @typedef {import('../config').WPConfig} WPConfig
@@ -26,7 +26,7 @@ const getHostUser = require( '../get-host-user' );
  * @param {Object}   options.spinner   A CLI spinner which indicates progress.
  * @param {boolean}  options.debug     True if debug mode is enabled.
  */
-module.exports = async function run( {
+export default async function run( {
 	container,
 	command,
 	'--': doubleDashedArgs,

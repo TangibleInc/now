@@ -2,22 +2,23 @@
 /**
  * External dependencies
  */
-const { v2: dockerCompose } = require( 'docker-compose' );
-const util = require( 'util' );
-const fs = require( 'fs' ).promises;
-const path = require( 'path' );
-const got = require( 'got' );
-const dns = require( 'dns' ).promises;
+import dockerCompose from './docker-compose.js' 
+import util from 'util' 
+import fs from 'fs/promises';
+import path from 'path' 
+import got from 'got' 
+import dns from 'dns/promises';
+import copyDirSync from 'copy-dir'
 
 /**
  * Promisified dependencies
  */
-const copyDir = util.promisify( require( 'copy-dir' ) );
+const copyDir = util.promisify( copyDirSync );
 
 /**
  * Internal dependencies
  */
-const { getCache, setCache } = require( './cache' );
+import { getCache, setCache } from './cache.js' 
 
 /**
  * @typedef {import('./config').WPConfig} WPConfig
@@ -389,7 +390,7 @@ async function getLatestWordPressVersion( options ) {
 	}
 }
 
-module.exports = {
+export {
 	hasSameCoreSource,
 	checkDatabaseConnection,
 	configureWordPress,

@@ -2,10 +2,10 @@
 /**
  * External dependencies
  */
-const util = require( 'util' );
-const fs = require( 'fs' );
-const stream = require( 'stream' );
-const path = require( 'path' );
+import util from 'util' 
+import fs from 'fs' 
+import stream from 'stream' 
+import path from 'path' 
 
 /**
  * Promisified dependencies
@@ -20,7 +20,7 @@ const finished = util.promisify( stream.finished );
  * @param {string} directoryPath The directory to detect.
  * @return {Promise<string|null>} 'core' if the directory is a WordPress installation, 'plugin' if it is a plugin, 'theme' if it is a theme, or null if we can't tell.
  */
-module.exports = async function detectDirectoryType( directoryPath ) {
+export default async function detectDirectoryType( directoryPath ) {
 	// If we have a `wp-includes/version.php` file, then this is a Core install.
 	if (
 		await exists(

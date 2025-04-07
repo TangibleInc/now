@@ -2,13 +2,13 @@
 /**
  * External dependencies
  */
-const path = require( 'path' );
-const os = require( 'os' );
+import path from 'path' 
+import os from 'os' 
 
 /**
  * Internal dependencies
  */
-const { ValidationError } = require( './validate-config' );
+import { ValidationError } from './validate-config.js' 
 
 /**
  * A WordPress installation, plugin or theme to be loaded into the environment.
@@ -158,7 +158,7 @@ function includeTestsPath( source, { cacheDirectoryPath } ) {
 	};
 }
 
-module.exports = {
+export {
 	parseSourceString,
 	includeTestsPath,
 };

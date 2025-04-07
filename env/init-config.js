@@ -2,16 +2,16 @@
 /**
  * External dependencies
  */
-const path = require( 'path' );
-const { writeFile, mkdir } = require( 'fs' ).promises;
-const { existsSync } = require( 'fs' );
-const yaml = require( 'js-yaml' );
+import path from 'path' 
+import { writeFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs' 
+import yaml from 'js-yaml' 
 
 /**
  * Internal dependencies
  */
-const { loadConfig, ValidationError } = require( './config' );
-const buildDockerComposeConfig = require( './build-docker-compose-config' );
+import { loadConfig, ValidationError } from './config/index.js' 
+import buildDockerComposeConfig from './build-docker-compose-config.js' 
 
 /**
  * @typedef {import('./config').WPConfig} WPConfig
@@ -33,7 +33,7 @@ const buildDockerComposeConfig = require( './build-docker-compose-config' );
  *                                       changes.
  * @return {WPConfig} The-env config object.
  */
-module.exports = async function initConfig( {
+export default async function initConfig( {
 	spinner,
 	debug,
 	xdebug = 'off',

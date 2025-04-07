@@ -2,12 +2,12 @@
 /**
  * External dependencies
  */
-const { v2: dockerCompose } = require( 'docker-compose' );
+import dockerCompose from '../docker-compose.js' 
 
 /**
  * Internal dependencies
  */
-const initConfig = require( '../init-config' );
+import initConfig from '../init-config.js' 
 
 /**
  * Stops the development server.
@@ -16,7 +16,7 @@ const initConfig = require( '../init-config' );
  * @param {Object}  options.spinner A CLI spinner which indicates progress.
  * @param {boolean} options.debug   True if debug mode is enabled.
  */
-module.exports = async function stop( { spinner, debug } ) {
+export default async function stop( { spinner, debug } ) {
 	const { dockerComposeConfigPath } = await initConfig( {
 		spinner,
 		debug,

@@ -2,13 +2,13 @@
 /**
  * External dependencies
  */
-const fs = require( 'fs' ).promises;
+import fs from 'fs/promises';
 
-const path = require( 'path' );
+import path from 'path' 
 /**
  * Internal dependencies
  */
-const { ValidationError } = require( './validate-config' );
+import { ValidationError } from './validate-config.js' 
 
 /**
  * Reads the config JSON from the filesystem and returns it as a JS object
@@ -18,7 +18,7 @@ const { ValidationError } = require( './validate-config' );
  *
  * @return {Object} the raw config data.
  */
-module.exports = async function readRawConfigFile( configPath ) {
+export default async function readRawConfigFile( configPath ) {
 	try {
 		return JSON.parse( await fs.readFile( configPath, 'utf8' ) );
 	} catch ( error ) {

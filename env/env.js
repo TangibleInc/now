@@ -2,12 +2,11 @@
 /**
  * Internal dependencies
  */
-const { ValidationError } = require( './config' );
-const { LifecycleScriptError } = require( './execute-lifecycle-script' );
-const commands = require( './commands' );
+import { ValidationError } from './config/index.js' 
+import { LifecycleScriptError } from './execute-lifecycle-script.js' 
+export * from './commands/index.js' 
 
-module.exports = {
-	...commands,
+export {
 	ValidationError,
 	LifecycleScriptError,
 };

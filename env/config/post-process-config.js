@@ -2,9 +2,9 @@
 /**
  * Internal dependencies
  */
-const mergeConfigs = require( './merge-configs' );
-const addOrReplacePort = require( './add-or-replace-port' );
-const { ValidationError } = require( './validate-config' );
+import mergeConfigs from './merge-configs.js' 
+import addOrReplacePort from './add-or-replace-port.js' 
+import { ValidationError } from './validate-config.js' 
 
 /**
  * @typedef {import('./parse-config').WPRootConfig} WPRootConfig
@@ -18,7 +18,7 @@ const { ValidationError } = require( './validate-config' );
  *
  * @return {WPEnvironmentConfig} The config after post-processing.
  */
-module.exports = function postProcessConfig( config ) {
+export default function postProcessConfig( config ) {
 	// Make sure that we're operating on a config object that has
 	// complete environment configs for convenience.
 	config = mergeRootToEnvironments( config );

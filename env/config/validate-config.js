@@ -170,7 +170,7 @@ function checkValidURL( configFile, configKey, url ) {
 	}
 }
 
-module.exports = {
+export {
 	ValidationError,
 	checkString,
 	checkPort,
