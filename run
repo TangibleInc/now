@@ -1,5 +1,0 @@
-#!/usr/bin/env node
-
-;(async () => {
-  await (await import('./build/esm/index.js')).runCli()
-})().catch(console.error)

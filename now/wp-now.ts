@@ -301,7 +301,7 @@ async function runWordPressDevelopMode(
 
 async function runWordPressMode(
   php: PHP,
-  { documentRoot, wpContentPath, projectPath, absoluteUrl }: WPNowOptions
+  { documentRoot = '', wpContentPath = '', projectPath ='', absoluteUrl = '' }: Partial<WPNowOptions>
 ) {
   await mountWithHandler(php, documentRoot, projectPath)
 
@@ -419,7 +419,9 @@ async function initWordPress(
     initializeDefaultDatabase = true
   }
 
-  const wpConfigConsts = {
+  const wpConfigConsts: {
+    [key: string]: string | boolean
+  } = {
     WP_HOME: siteUrl,
     WP_SITEURL: siteUrl,
   }
@@ -435,11 +437,13 @@ async function initWordPress(
 
 async function activatePluginOrTheme(
   php: PHP,
-  { projectPath, mode }: WPNowOptions
+  { projectPath = '', mode }: WPNowOptions
 ) {
   if (mode === WPNowMode.PLUGIN) {
     const pluginFile = getPluginFile(projectPath)
-    await activatePlugin(php, { pluginPath: pluginFile })
+    if (pluginFile) {
+      await activatePlugin(php, { pluginPath: pluginFile })
+    }
   } else if (mode === WPNowMode.THEME) {
     const themeFolderName = path.basename(projectPath)
     await activateTheme(php, { themeFolderName })
@@ -450,7 +454,7 @@ export function getThemeTemplate(projectPath: string): string | void {
   const themeTemplateRegex = /^(?:[ \t]*<\?php)?[ \t/*#@]*Template:(.*)$/im
   const styleCSS = readFileHead(path.join(projectPath, 'style.css'))
   if (themeTemplateRegex.test(styleCSS)) {
-    const themeName = themeTemplateRegex.exec(styleCSS)[1].trim()
+    const themeName = themeTemplateRegex.exec(styleCSS)?.[1]?.trim()
     return themeName
   }
 }
@@ -521,7 +525,7 @@ export function inferMode(
 }
 
 async function installationStep2(php: PHP) {
-  return await php.requestHandler.request({
+  return await php.requestHandler?.request({
     url: '/wp-admin/install.php?step=2',
     method: 'POST',
     body: {

@@ -9,7 +9,7 @@ import {
   useHostFilesystem
 } from '../php-wasm/index.js'
 
-import phpCli from '../php-cli/main.ts'
+import phpCli from '../php-cli/main.js'
 
 /**
  * Execute a PHP cli given its parameters.

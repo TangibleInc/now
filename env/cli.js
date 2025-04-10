@@ -258,6 +258,11 @@ export default function cli(args = process.argv) {
 		withSpinner( env.installPath )
 	);
 
+  yargs.command('help', 'Show this help message')
+
+  yargs.demandCommand(1, 'You must provide a valid command')
+		.help()
+
   // yargs.parse(process.argv.slice(2))
 
 	return yargs;

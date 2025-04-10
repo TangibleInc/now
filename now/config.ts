@@ -36,19 +36,19 @@ export const enum WPNowMode {
 }
 
 export interface WPNowOptions {
-	phpVersion?: SupportedPHPVersion;
-	documentRoot?: string;
-	absoluteUrl?: string;
-	mode?: WPNowMode;
-	port?: number;
-	projectPath?: string;
-	wpContentPath?: string;
-	wordPressVersion?: string;
-	numberOfPhpInstances?: number;
-	blueprintObject?: Blueprint;
-	reset?: boolean;
+	phpVersion: SupportedPHPVersion;
+	documentRoot: string;
+	absoluteUrl: string;
+	mode: WPNowMode;
+	port: number;
+	projectPath: string;
+	wpContentPath: string;
+	wordPressVersion: string;
+	numberOfPhpInstances: number;
+	blueprintObject: Blueprint;
+	reset: boolean;
 	landingPage?: string;
-  mappings?: {
+  mappings: {
     [src: string]: string;
   }
 }

@@ -73,6 +73,7 @@ async function fileExists(file: string): Promise<boolean> {
   async function getEntryPoints() {
     return await globby(
       [
+        'cli.ts',
         'index.ts',
         'blueprints/**/*.ts',
         'cli/**/*.ts',
@@ -131,6 +132,7 @@ async function fileExists(file: string): Promise<boolean> {
     await fs.writeFile(`build/esm/package.json`, `{"type": "module"}`)
 
     for (const dir of [
+      'env',
       'php-cli',
       'php-wasm',
       'php-wasm-fs-journal',
