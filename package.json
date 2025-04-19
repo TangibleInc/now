@@ -1,7 +1,7 @@
 {
   "name": "@tangible/now",
   "type": "module",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Standalone command-line tool to run local sites on WordPress Playground",
   "homepage": "https://github.com/tangibleinc/now",
   "repository": {
@@ -43,6 +43,7 @@
   "files": [
     "bin",
     "build",
+    "lib",
     "license.txt",
     "package.json",
     "readme.md"
