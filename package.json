@@ -2,7 +2,7 @@
   "name": "@tangible/now",
   "type": "module",
   "version": "3.0.0",
-  "description": "Standalone command-line tool to run local WordPress site on Playground",
+  "description": "Standalone command-line tool to run local sites on WordPress Playground",
   "homepage": "https://github.com/tangibleinc/now",
   "repository": {
     "url": "git+ssh://git@github.com/tangibleinc/now.git"
@@ -41,13 +41,14 @@
     }
   },
   "files": [
+    "bin",
     "build",
     "license.txt",
     "package.json",
     "readme.md"
   ],
   "dependencies": {
-    "@expreva/php-wasm-7-4": "^1.0.29-alpha.1",
+    "@expreva/php-wasm-7-4": "^1.0.29-alpha.2",
     "@inquirer/prompts": "^7.4.1",
     "@php-wasm/progress": "1.0.28",
     "@php-wasm/universal": "1.0.28",

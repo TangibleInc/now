@@ -35,12 +35,12 @@ async function fileExists(file: string): Promise<boolean> {
    * Add file extensions to satisfy ESM requirement
    */
     if (command === 'ext') {
-      for (const file of await globby('blueprints/**/*.ts')) {
-        const content = (await fs.readFile(file, 'utf8'))
-          .replace(/from '\.(.+)'/g, "from '.$1.ts'")
-        console.log(file)
-        await fs.writeFile(file, content)
-      }
+      // for (const file of await globby('blueprints/**/*.ts')) {
+      //   const content = (await fs.readFile(file, 'utf8'))
+      //     .replace(/from '\.(.+)'/g, "from '.$1.ts'")
+      //   console.log(file)
+      //   await fs.writeFile(file, content)
+      // }
   
       return
     }
@@ -75,15 +75,8 @@ async function fileExists(file: string): Promise<boolean> {
       [
         'cli.ts',
         'index.ts',
-        'blueprints/**/*.ts',
         'cli/**/*.ts',
-        'common/**/*.ts',
-        'isomorphic-git/**/*.js',
         'now/**/*.ts',
-        // 'php-wasm-node'
-        'public/**/*.ts',
-        'storage/**/*.ts',
-        'wordpress/**/*.ts',
       ],
       {
         ignore: ['**/*.spec.ts', '**/*.d.ts'],
