@@ -5,9 +5,7 @@ cmd=node
 src="$script_dir"/../build/esm/cli.js
 if [ -x "$(command -v bun)" ]; then
   cmd=bun
-  src="$script_dir"/../cli.ts
 elif [ -x "$(command -v deno)" ]; then
   cmd=deno
-  src="$script_dir"/../cli.ts
 fi
 $cmd "$src" "$@"
