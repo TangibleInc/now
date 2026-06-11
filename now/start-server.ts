@@ -50,7 +50,7 @@ export async function startServer(
 
 	app.use('/', async (req, res) => {
 		try {
-			const requestHeaders = {};
+			const requestHeaders: Record<string, string> = {};
 			if (req.rawHeaders && req.rawHeaders.length) {
 				for (let i = 0; i < req.rawHeaders.length; i += 2) {
 					requestHeaders[req.rawHeaders[i].toLowerCase()] =

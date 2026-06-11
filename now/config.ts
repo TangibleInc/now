@@ -5,7 +5,7 @@ import {
 import crypto from 'crypto';
 import fs from 'fs-extra';
 import path from 'path';
-import { Blueprint } from '@wp-playground/blueprints';
+import { BlueprintV1Declaration } from '@wp-playground/blueprints';
 import { getCodeSpaceURL, isGitHubCodespace } from './github-codespaces.ts';
 import { inferMode } from './wp-now.ts';
 import { portFinder } from './port-finder.ts';
@@ -45,7 +45,7 @@ export interface WPNowOptions {
 	wpContentPath: string;
 	wordPressVersion: string;
 	numberOfPhpInstances: number;
-	blueprintObject: Blueprint;
+	blueprintObject: BlueprintV1Declaration;
 	reset: boolean;
 	landingPage?: string;
   mappings: {
@@ -256,18 +256,19 @@ export default async function getWpNowConfig(
 }
 
 function extractSiteUrlFromBlueprint(
-	blueprintObject: Blueprint
+	blueprintObject: BlueprintV1Declaration
 ): string | false {
-	for (const step of blueprintObject.steps) {
-		if (typeof step !== 'object') {
+	for (const rawStep of blueprintObject.steps ?? []) {
+		if (!rawStep || typeof rawStep !== 'object') {
 			return false;
 		}
 
+		const step = rawStep as { step: string; siteUrl?: string; consts?: Record<string, unknown> };
 		if (step.step === 'defineSiteUrl') {
 			return `${step.siteUrl}`;
 		} else if (
 			step.step === 'defineWpConfigConsts' &&
-			step.consts.WP_SITEURL
+			step.consts?.WP_SITEURL
 		) {
 			return `${step.consts.WP_SITEURL}`;
 		}

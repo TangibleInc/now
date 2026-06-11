@@ -13,20 +13,15 @@ import {
 import { logger, errorLogPath } from '@php-wasm/logger';
 import {
 	Blueprint,
+	BlueprintV1Declaration,
 	compileBlueprint,
 	runBlueprintSteps,
-}
-  from '../wp-playground-blueprints/index.js'
-  // from '@wp-playground/blueprints'
+} from '@wp-playground/blueprints'
 import { isValidWordPressSlug } from './is-valid-wordpress-slug';
 import { EmscriptenDownloadMonitor, ProgressTracker } from '@php-wasm/progress';
-import { createNodeFsMountHandler, loadNodeRuntime }
-  // from '../php-wasm-node'
-  from '@php-wasm/node'
+import { createNodeFsMountHandler, loadNodeRuntime } from '../php-wasm/index.js'
 import { RecommendedPHPVersion, zipDirectory } from '@wp-playground/common';
-import { bootWordPress, resolveWordPressRelease }
-  from '../wp-playground-wordpress/index.js'
-  // from '@wp-playground/wordpress'
+import { bootWordPressAndRequestHandler, resolveWordPressRelease } from '@wp-playground/wordpress'
 import { rootCertificates } from 'tls';
 import {
 	CACHE_FOLDER,
@@ -166,7 +161,7 @@ export async function run(args: {
 	async function zipSite(outfile: string) {
 		// Fake URL for the build
 		const { php, reap } =
-			await requestHandler.processManager.acquirePHPInstance();
+			await requestHandler.instanceManager.acquirePHPInstance();
 		try {
 			await php.run({
 				code: `<?php
@@ -250,7 +245,7 @@ export async function run(args: {
 				process.stdout.write('\n');
 			}
 		});
-		return compileBlueprint(blueprint as Blueprint, {
+		return compileBlueprint(blueprint as BlueprintV1Declaration, {
 			progress: tracker,
 		});
 	}
@@ -261,7 +256,7 @@ export async function run(args: {
 		process.exit(1);
 	}
 
-	const compiledBlueprint = compileInputBlueprint();
+	const compiledBlueprint = await compileInputBlueprint();
 
 	let requestHandler: PHPRequestHandler;
 	let wordPressReady = false;
@@ -326,7 +321,7 @@ export async function run(args: {
 				};
 
 			logger.log(`Booting WordPress...`);
-			requestHandler = await bootWordPress({
+			requestHandler = await bootWordPressAndRequestHandler({
 				siteUrl: absoluteUrl,
 				createPhpRuntime: async () =>
 					await loadNodeRuntime(compiledBlueprint.versions.php),
@@ -344,7 +339,7 @@ export async function run(args: {
 					disable_functions: '',
 				},
 				hooks: {
-					async beforeWordPressFiles(php) {
+					async beforeWordPressFiles(php: PHP) {
 						if (args.mountBeforeInstall) {
 							mountResources(php, args.mountBeforeInstall);
 						}
@@ -378,7 +373,7 @@ export async function run(args: {
 
 				if (compiledBlueprint) {
 					const { php, reap } =
-						await requestHandler.processManager.acquirePHPInstance();
+						await requestHandler.instanceManager.acquirePHPInstance();
 					try {
 						logger.log(`Running the Blueprint...`);
 						await runBlueprintSteps(compiledBlueprint, php);

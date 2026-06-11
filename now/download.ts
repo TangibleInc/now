@@ -12,7 +12,7 @@ import getWpCliPath from './get-wp-cli-path.ts';
 import getWpNowPath from './get-wp-now-path.ts';
 import { output } from './output.ts';
 
-function httpsGet(url: string, callback: Function) {
+function httpsGet(url: string, callback: (res: IncomingMessage) => void) {
 	const proxy =
 		process.env.https_proxy ||
 		process.env.HTTPS_PROXY ||
@@ -44,7 +44,7 @@ interface DownloadFileAndUnzipResult {
 	statusCode: number;
 }
 
-followRedirects.maxRedirects = 5;
+(followRedirects as any).maxRedirects = 5;
 const { https } = followRedirects;
 
 async function downloadFile({
