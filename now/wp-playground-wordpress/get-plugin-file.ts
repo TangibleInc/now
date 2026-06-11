@@ -31,7 +31,9 @@ export function getPluginFile(projectPath: string) {
 			const pluginNameRegex =
 				/^(?:[ \t]*<\?php)?[ \t/*#@]*Plugin Name:(.*)$/im;
 			if (pluginNameRegex.test(fileContent)) {
-				return path.join(path.basename(projectPath), file);
+				// WordPress plugin paths always use forward slashes, including
+				// on Windows where path.join() would produce backslashes
+				return `${path.basename(projectPath)}/${file}`;
 			}
 		}
 	}
