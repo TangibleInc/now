@@ -1,11 +1,11 @@
 import {
-	SupportedPHPVersion,
+	type SupportedPHPVersion,
 	SupportedPHPVersionsList,
 } from '@php-wasm/universal';
 import crypto from 'crypto';
 import fs from 'fs-extra';
 import path from 'path';
-import { BlueprintV1Declaration } from '@wp-playground/blueprints';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 import { getCodeSpaceURL, isGitHubCodespace } from './github-codespaces.ts';
 import { inferMode } from './wp-now.ts';
 import { portFinder } from './port-finder.ts';

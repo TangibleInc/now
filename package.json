@@ -22,6 +22,7 @@
     "format": "prettier --no-config --log-level warn --no-semi --single-quote --write --tab-width 2 --use-tabs false src",
     "test": "cd tests && bun index.ts",
     "test:8.4": "cd tests && PHP_VERSION=8.4 bun index.ts",
+    "test:node": "cd tests && node --experimental-transform-types index.ts",
     "test:all": "npm run test && npm run test:8.4",
     "test:composer": "cd tests && ../bin/wp-now composer install",
     "test:phpunit": "cd tests && ../bin/wp-now phpunit",

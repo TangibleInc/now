@@ -1,7 +1,7 @@
 import * as path from 'path';
 import fs from 'fs-extra';
 import startWPNow from './wp-now.ts';
-import { WPNowMode, WPNowOptions } from './config.ts';
+import { WPNowMode, type WPNowOptions } from './config.ts';
 import { disableOutput } from './output.ts';
 
 // @php-wasm/node

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { WPNowOptions } from './config.ts';
+import { type WPNowOptions } from './config.ts';
 import type { HTTPMethod, PHP } from '@php-wasm/universal';
 import express from 'express';
 import compression from 'compression';

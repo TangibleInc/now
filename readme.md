@@ -18,4 +18,7 @@ Available: `7.4`, `8.2`, `8.3`, `8.4`, `8.5` (`@php-wasm/node-<major>-<minor>`).
 
 Notes:
 - The optional `intl` PHP extension is not supported (see `php-wasm-node/README.md`).
-- On Windows, run under Node. Bun cannot load the `fs-ext` native module there.
+- On Windows, run the test suite with `npm run test:node` (Node with native
+  TypeScript support). Bun cannot load the `fs-ext` native module on Windows
+  (it is a NAN-based addon; Bun's V8 ABI shim crashes - see
+  https://github.com/oven-sh/bun/issues/4290).

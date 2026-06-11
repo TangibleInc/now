@@ -12,7 +12,7 @@ import {
 	proxyFileSystem,
 	rotatePHPRuntime,
 	setPhpIniEntries,
-	UnmountFunction,
+	type UnmountFunction,
 } from '../php-wasm/index.js'
 
 import {
@@ -27,7 +27,7 @@ import {
 } from './download.ts'
 
 import {
-  StepDefinition,
+  type StepDefinition,
   activatePlugin,
   activateTheme,
   compileBlueprint,
@@ -36,7 +36,7 @@ import {
   runBlueprintSteps,
 } from '@wp-playground/blueprints'
 
-import { WPNowOptions, WPNowMode } from './config.ts'
+import { type WPNowOptions, WPNowMode } from './config.ts'
 import {
   hasIndexFile,
   isPluginDirectory,

@@ -4,16 +4,16 @@ import yargs from 'yargs';
 import { startServer } from './server';
 import {
 	PHP,
-	PHPRequest,
+	type PHPRequest,
 	PHPRequestHandler,
 	PHPResponse,
-	SupportedPHPVersion,
+	type SupportedPHPVersion,
 	SupportedPHPVersions,
 } from '@php-wasm/universal';
 import { logger, errorLogPath } from '@php-wasm/logger';
 import {
-	Blueprint,
-	BlueprintV1Declaration,
+	type Blueprint,
+	type BlueprintV1Declaration,
 	compileBlueprint,
 	runBlueprintSteps,
 } from '@wp-playground/blueprints'
