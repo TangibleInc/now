@@ -5,20 +5,20 @@ import {
   // @php-wasm/node
   createNodeFsMountHandler,
   loadNodeRuntime,
+  DefaultPHPVersion,
   // @php-wasm/universal
   PHP,
 	PHPRequestHandler,
 	proxyFileSystem,
 	rotatePHPRuntime,
 	setPhpIniEntries,
-	UnmountFunction,
+	type UnmountFunction,
 } from '../php-wasm/index.js'
 
-// @wp-playground/wordpress
 import {
   wordPressRewriteRules,
   getFileNotFoundActionForWordPress,
-} from  '../wp-playground-wordpress/index.js'
+} from '@wp-playground/wordpress'
 import { SQLITE_FILENAME } from './constants.ts'
 import {
   downloadMuPlugins,
@@ -26,18 +26,17 @@ import {
   downloadWordPress,
 } from './download.ts'
 
-// @wp-playground/blueprints
 import {
-  StepDefinition,
+  type StepDefinition,
   activatePlugin,
   activateTheme,
   compileBlueprint,
   defineWpConfigConsts,
   login,
   runBlueprintSteps,
-} from '../wp-playground-blueprints/index.js'
+} from '@wp-playground/blueprints'
 
-import { WPNowOptions, WPNowMode } from './config.ts'
+import { type WPNowOptions, WPNowMode } from './config.ts'
 import {
   hasIndexFile,
   isPluginDirectory,
@@ -70,8 +69,8 @@ export default async function startWPNow(
 
   const { documentRoot } = options
 
-  // TODO: Lazy-load PHP versions
-  options.phpVersion = '7.4' 
+  // PHP runtimes are imported on demand per version - see ../php-wasm/index.js
+  options.phpVersion = options.phpVersion || DefaultPHPVersion
 
   const requestHandler = new PHPRequestHandler({
     phpFactory: async ({ isPrimary, requestHandler }) => {
@@ -160,8 +159,8 @@ export default async function startWPNow(
   await installationStep2(php)
 
   if (options.blueprintObject) {
-    output?.log(`Blueprint steps: ${options.blueprintObject.steps.length}`)
-    const compiled = compileBlueprint(options.blueprintObject, {
+    output?.log(`Blueprint steps: ${options.blueprintObject.steps?.length ?? 0}`)
+    const compiled = await compileBlueprint(options.blueprintObject, {
       onStepCompleted: (result, step: StepDefinition) => {
         output?.log(`Blueprint step completed: ${step.step}`)
       },

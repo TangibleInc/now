@@ -11,7 +11,7 @@ import {
   // @php-wasm/universal
   PHP,
 	setPhpIniEntries,
-	MountHandler,
+	type MountHandler,
 	writeFiles,
 } from '../php-wasm/index.js'
 

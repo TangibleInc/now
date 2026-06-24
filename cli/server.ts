@@ -1,7 +1,7 @@
-import express, { Request } from 'express';
-import { PHPRequest, PHPResponse } from '@php-wasm/universal';
+import express, { type Request } from 'express';
+import { type PHPRequest, PHPResponse } from '@php-wasm/universal';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import { AddressInfo } from 'net';
+import { type AddressInfo } from 'net';
 
 export interface ServerOptions {
 	port: number;

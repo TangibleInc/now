@@ -1,8 +1,8 @@
 import path from 'node:path'
 import { test, is, ok, run } from 'testra'
 import { startServer, getWpNowConfig } from '../now/index.ts'
-import wpEnv from './.wp-env.json'
-import wpEnvOverride from './.wp-env.override.json'
+import wpEnv from './.wp-env.json' with { type: 'json' }
+import wpEnvOverride from './.wp-env.override.json' with { type: 'json' }
 
 test('wp-now', async () => {
   const wpEnvOptions = Object.assign({}, wpEnv, wpEnvOverride)

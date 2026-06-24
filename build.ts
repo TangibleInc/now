@@ -128,11 +128,7 @@ async function fileExists(file: string): Promise<boolean> {
       'env',
       'php-cli',
       'php-wasm',
-      'php-wasm-fs-journal',
-      'php-wasm-web-utils',
-      'wp-playground-blueprints',
-      'wp-playground-storage',
-      'wp-playground-wordpress',
+      'php-wasm-node',
     ]) {
       await fs.cp(dir, `build/esm/${dir}`, {
         recursive: true,

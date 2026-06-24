@@ -22,6 +22,7 @@
     "format": "prettier --no-config --log-level warn --no-semi --single-quote --write --tab-width 2 --use-tabs false src",
     "test": "cd tests && bun index.ts",
     "test:8.4": "cd tests && PHP_VERSION=8.4 bun index.ts",
+    "test:node": "cd tests && node --experimental-transform-types index.ts",
     "test:all": "npm run test && npm run test:8.4",
     "test:composer": "cd tests && ../bin/wp-now composer install",
     "test:phpunit": "cd tests && ../bin/wp-now phpunit",
@@ -49,14 +50,17 @@
     "readme.md"
   ],
   "dependencies": {
-    "@expreva/php-wasm-7-4": "^1.0.29-alpha.2",
     "@inquirer/prompts": "^7.4.1",
-    "@php-wasm/progress": "1.0.28",
-    "@php-wasm/universal": "1.0.28",
-    "@php-wasm/util": "1.0.28",
-    "@php-wasm/web-service-worker": "^1.0.28",
+    "@php-wasm/cli-util": "3.1.38",
+    "@php-wasm/logger": "3.1.38",
+    "@php-wasm/node-8-2": "3.1.38",
+    "@php-wasm/progress": "3.1.38",
+    "@php-wasm/universal": "3.1.38",
+    "@php-wasm/util": "3.1.38",
     "@webcontainer/env": "^1.1.1",
-    "@wp-playground/common": "^1.0.28",
+    "@wp-playground/blueprints": "3.1.38",
+    "@wp-playground/common": "3.1.38",
+    "@wp-playground/wordpress": "3.1.38",
     "chalk": "^5.4.1",
     "compressible": "^2.0.18",
     "compression": "^1.8.0",
@@ -67,6 +71,7 @@
     "express-fileupload": "^1.5.1",
     "extract-zip": "^2.0.1",
     "follow-redirects": "^1.15.9",
+    "fs-ext-extra-prebuilt": "2.2.7",
     "fs-extra": "^11.3.0",
     "got": "^14.4.7",
     "hpagent": "^1.2.0",
@@ -78,11 +83,41 @@
     "simple-git": "^3.27.0",
     "terminal-link": "^4.0.0",
     "unzipper": "^0.12.3",
+    "wasm-feature-detect": "1.8.0",
+    "ws": "8.21.0",
     "yargs": "^17.7.2"
+  },
+  "peerDependencies": {
+    "@php-wasm/node-7-4": "3.1.38",
+    "@php-wasm/node-8-3": "3.1.38",
+    "@php-wasm/node-8-4": "3.1.38",
+    "@php-wasm/node-8-5": "3.1.38"
+  },
+  "peerDependenciesMeta": {
+    "@php-wasm/node-7-4": {
+      "optional": true
+    },
+    "@php-wasm/node-8-3": {
+      "optional": true
+    },
+    "@php-wasm/node-8-4": {
+      "optional": true
+    },
+    "@php-wasm/node-8-5": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@gjsify/esbuild-plugin-transform-ext": "^0.0.4",
+    "@php-wasm/node-7-4": "3.1.38",
+    "@php-wasm/node-8-4": "3.1.38",
+    "@types/compressible": "^2.0.3",
+    "@types/compression": "^1.8.1",
+    "@types/express": "^5.0.6",
+    "@types/follow-redirects": "^1.14.4",
     "@types/fs-extra": "^11.0.4",
+    "@types/unzipper": "^0.10.11",
+    "@types/yargs": "^17.0.35",
     "esbuild": "^0.25.2",
     "globby": "^14.1.0",
     "testra": "^2.1.5",
